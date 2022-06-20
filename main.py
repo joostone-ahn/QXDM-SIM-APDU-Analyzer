@@ -14,7 +14,7 @@ BoldFont.setBold(True)
 CourierNewFont = QtGui.QFont()
 CourierNewFont.setFamily("Courier New")
 
-debug_mode = 1
+debug_mode = 0
 
 class Basic_GUI(QWidget):
 
