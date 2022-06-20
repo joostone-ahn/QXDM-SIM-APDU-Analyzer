@@ -7,4 +7,4 @@ If you load the text file, you can analyze APDU logs on application-level and pr
 run main.py
 The followings are sample result.
 
-![image](https://user-images.githubusercontent.com/98713651/174545077-78c6671c-3dc6-4c4f-8eeb-45512349f0eb.png)
+![image](https://user-images.githubusercontent.com/98713651/174545149-abb382ec-b148-4d33-b738-31386c6d097c.png)
