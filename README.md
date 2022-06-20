@@ -1,12 +1,12 @@
 # QXDM-SIM-APDU-Analyzer
 
-eSIM devices supporting DSDS(Dual SIM Dual Standby) have the following limitations.
- - The interface between eSIM and ME(Mobile Equipment) can not be traced with contact-based tools alike Minimove (COMPRION) 
+eSIM device supporting DSDS(Dual SIM Dual Standby) has following limitations.
+ - The interface between eSIM and ME(Mobile Equipment) can not be traced with contact-based SIM tracer alike Minimove (COMPRION) 
  - ME's logs includes mixed APDU logs from pSIM and eSIM.
 
-If you want to analyze eSIM's APDU protocol, you have to analyze it in ME side.
-This tool helps you to analyze SIM APDU protocol with QXDM or QCAT logs.
-If you load the text file, you can analyze APDU logs on application-level and protocol-level.
+This tool helps you to overcome the above limits.
+ - APDU logs can be analyzed on application-level and protocol-leved similarly to contact-based SIM tracer.
+ - APDU logs from pSIM or eSIM can be sorted by user's selection.
 
 [Guide]
 1) run main.py
