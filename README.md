@@ -12,7 +12,7 @@ This tool helps you to overcome the above limits.
 [Guide]
 1) run main.py
 2) click 'Open file' button and open a text file(.txt) in 'file_sample' directory
-  ※ text file filtered with 'UIM APDU [0x19B7]' from QXDM or QCAT logs
-3) click 'Execute' button
+  ※ filtered with 'UIM APDU [0x19B7]' from QXDM or QCAT logs
+3) click 'Execute' button````
 
 ![image](https://user-images.githubusercontent.com/98713651/174545149-abb382ec-b148-4d33-b738-31386c6d097c.png)
