@@ -4,12 +4,13 @@ def rst(input):
     end = prot_end[item_num]
 
     app_rst = []
-    app_rst.append('='*100)
     for m in range(len(start)):
         for n in range(start[m], end[m]+1):
-            if msg_all[n].replace(' ','') != '':
-                app_rst.append(msg_all[n])
-        app_rst.append('='*100)
+            if 'APDU Parsing' in msg_all[n] or 'RESET' in msg_all[n] or 'DATA' in msg_all[n] :
+                app_rst.append('=' * 100)
+                app_rst += msg_all[start[m]:end[m]]
+                if app_rst[-1] == '' or app_rst[-1] == '  ' : del app_rst[-1]
+    if app_rst : app_rst.append('=' * 100)
 
     return app_rst
 

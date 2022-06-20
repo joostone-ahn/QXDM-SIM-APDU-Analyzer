@@ -2,7 +2,7 @@ import SELECT
 
 def rst(input):
     debug_mode = 0
-    msg_all, prot_start, prot_end, prot_type = input
+    msg_all, prot_start, prot_end, prot_type, prot_data = input
     sum_rst = []
     for m in range(len(prot_start)):
         sum_time = msg_all[prot_start[m][0]].split('  ')[1].split('  [')[0]
@@ -44,6 +44,7 @@ def rst(input):
             if debug_mode: print('sum_sw       :',sum_sw)
 
             sum_rst.append(sum_time + '  ' + sum_cmd)
+
             # if sum_cmd == 'SELECT':
             #     File_name, File_id = SELECT.process(m + 2, prot_end[n] + 1, msg_all)
             #     sum_rst = SELECT.rst(sum_all, sum_time, Command, File_name, File_id, SW_code)
