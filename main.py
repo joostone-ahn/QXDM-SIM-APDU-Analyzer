@@ -130,7 +130,7 @@ class Basic_GUI(QWidget):
 
         self.msg_start, self.msg_end, self.msg_SN, self.msg_port, self.msg_type, self.msg_data = msg_item.process(self.msg_all)
 
-        if debug_mode == 1:
+        if debug_mode :
             print('[File Name]', opened_file)
             print('msg_start :', len(self.msg_start), self.msg_start)
             print('msg_end   :', len(self.msg_end), self.msg_end)
@@ -159,7 +159,7 @@ class Basic_GUI(QWidget):
         port_input = self.msg_all, self.msg_start, self.msg_end, self.msg_SN, self.msg_type, self.msg_data
         self.exe_start, self.exe_end, self.exe_type, self.exe_data = port.process(port_input, port_index)
 
-        if debug_mode == 1:
+        if debug_mode :
             print('[ SIM PORT', port_num, ']')
             print('exe_start  :', len(self.exe_start), self.exe_start)
             print('exe_end    :', len(self.exe_end), self.exe_end)
@@ -170,7 +170,7 @@ class Basic_GUI(QWidget):
         prot_input = self.exe_start, self.exe_end, self.exe_type, self.exe_data
         self.prot_start, self.prot_end, self.prot_type, self.prot_data = msg_prot.process(prot_input)
 
-        if debug_mode == 1:
+        if debug_mode :
             print('[ PROTOCOL LEVEL FILTER ]')
             print('prot_start :', len(self.prot_start), self.prot_start)
             print('prot_end   :', len(self.prot_end), self.prot_end)
@@ -183,7 +183,7 @@ class Basic_GUI(QWidget):
         for n in self.sum_rst:
             self.SUM_list.addItem(n)
 
-        if debug_mode == 1:
+        if debug_mode :
             print('[ SUMMARY FILTER ]')
             print('sum_rst    :', len(self.sum_rst), self.sum_rst)
             print()
