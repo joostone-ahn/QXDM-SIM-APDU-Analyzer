@@ -178,7 +178,7 @@ class Basic_GUI(QWidget):
             print('prot_data  :', len(self.prot_data), self.prot_data)
             print()
 
-        sum_input = self.msg_all, self.prot_start, self.prot_end, self.prot_type, self.prot_data
+        sum_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data
         self.sum_rst = msg_sum.rst(sum_input)
         for n in self.sum_rst:
             self.SUM_list.addItem(n)

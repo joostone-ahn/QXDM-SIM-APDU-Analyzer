@@ -1,9 +1,8 @@
 import apdu_parsing
-import SELECT
 debug_mode = 1
 
 def rst(input):
-    msg_all, prot_start, prot_end, prot_type, prot_data = input
+    msg_all, prot_start, prot_type, prot_data = input
 
     sum_rst = []
     for m in range(len(prot_start)):
@@ -18,27 +17,29 @@ def rst(input):
 
             if sum_ins in apdu_parsing.cmd_name:
                 sum_cmd = apdu_parsing.cmd_name[sum_ins]
-                sum_detail = apdu_parsing.process(msg_all, prot_start, prot_end, prot_data)
+                sum_detail = apdu_parsing.process(prot_data[m], sum_cmd)
             else:
-                sum_cmd = "Unknown (INS '%s')"%sum_ins
-
-            if len(prot_data[m][-1]) >= 4:
-                sum_sw = prot_data[m][-1][-4:]
-            else: # ERROR
-                sum_sw = ''
-                sum_detail = '(incomplete)'
+                sum_cmd = 'Unknown INS'
+                sum_detail = "'%s'"%sum_ins
 
             sum_rst.append(sum_time + '  ' + sum_cmd)
-            if sum_detail != '' : sum_rst[-1] += ' ' + sum_detail
-            if sum_sw != '9000':
-                sum_rst[-1] += ' ***'
+            if sum_detail != '' : sum_rst[-1] += ' (' + sum_detail + ')'
+
+            # (TBD) R-APDU Analysis
+            if len(prot_data[m][-1]) >= 4:
+                sum_sw = prot_data[m][-1][-4:]
+            else:  # ERROR
+                sum_sw = ''
+                sum_rst[-1] += ' (incomplete)'
+            if sum_sw != '9000': sum_rst[-1] += ' ***'
 
             if debug_mode:
-                print('sum_time :', sum_time)
-                print('sum_type :', sum_type)
-                print('sum_ins  :', sum_ins)
-                print('sum_cmd  :', sum_cmd)
-                print('sum_sw   :', sum_sw)
+                print('sum_time   :', sum_time)
+                print('sum_type   :', sum_type)
+                print('sum_ins    :', sum_ins)
+                print('sum_cmd    :', sum_cmd)
+                print('sum_detail :', sum_detail)
+                print('sum_sw     :', sum_sw)
                 print('')
 
     return sum_rst
