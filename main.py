@@ -37,7 +37,7 @@ class Basic_GUI(QWidget):
         hbox1 = QHBoxLayout()
         hbox1.addWidget(self.open_btn)
         hbox1.addWidget(self.opened_label)
-        hbox1.addStretch()
+        # hbox1.addStretch()
 
         self.comb_box = QComboBox()
         self.comb_box.addItem("SIM Port1")
@@ -53,7 +53,6 @@ class Basic_GUI(QWidget):
 
         self.exe_btn.clicked.connect(self.exe_msg)
 
-
         hbox2 = QHBoxLayout()
         hbox2.addWidget(self.comb_box)
         hbox2.addWidget(self.exe_btn)
@@ -64,16 +63,15 @@ class Basic_GUI(QWidget):
         self.SUM_label.setFont(CourierNewFont)
         self.SUM_list = QListWidget()
         self.SUM_list.setAutoScroll(True)
-        self.SUM_list.setFixedWidth(500)
         self.SUM_list.setFixedHeight(500)
+        self.SUM_list.setFixedWidth(500)
         self.SUM_list.setFont(CourierNewFont)
-
-        self.SUM_list.itemClicked.connect(self.clicked_rst)
-        self.SUM_list.itemSelectionChanged.connect(self.clicked_rst)
-
         SUM_vbox = QVBoxLayout()
         SUM_vbox.addWidget(self.SUM_label)
         SUM_vbox.addWidget(self.SUM_list)
+
+        self.SUM_list.itemClicked.connect(self.clicked_rst)
+        self.SUM_list.itemSelectionChanged.connect(self.clicked_rst)
 
         self.App_label = QLabel()
         self.App_label.setText("Application-Level Analysis")
@@ -88,16 +86,32 @@ class Basic_GUI(QWidget):
         hbox3 = QHBoxLayout()
         hbox3.addLayout(SUM_vbox)
         hbox3.addLayout(App_vbox)
+        # hbox3.addStretch()
+
+        self.SUM_File_label = QLabel()
+        self.SUM_File_label.setText("EF_FILE SUMMARY (TBD)")
+        self.SUM_File_label.setFont(CourierNewFont)
+        self.SUM_File_list = QListWidget()
+        self.SUM_File_list.setAutoScroll(True)
+        self.SUM_File_list.setFixedWidth(500)
+        self.SUM_File_list.setFont(CourierNewFont)
+        SUM_File_vbox = QVBoxLayout()
+        SUM_File_vbox.addWidget(self.SUM_File_label)
+        SUM_File_vbox.addWidget(self.SUM_File_list)
 
         self.Prot_label = QLabel()
         self.Prot_label.setText("Protocol-Level Analysis")
         self.Prot_label.setFont(CourierNewFont)
         self.Prot_list = QTextBrowser()
-        self.Prot_list.setFixedHeight(250)
         self.Prot_list.setFont(CourierNewFont)
         Prot_vbox = QVBoxLayout()
         Prot_vbox.addWidget(self.Prot_label)
         Prot_vbox.addWidget(self.Prot_list)
+
+        hbox4 = QHBoxLayout()
+        hbox4.addLayout(SUM_File_vbox)
+        hbox4.addLayout(Prot_vbox)
+        # hbox4.addStretch()
 
         vbox = QVBoxLayout()
         vbox.addLayout(hbox1)
@@ -105,8 +119,10 @@ class Basic_GUI(QWidget):
         vbox.addWidget(QLabel())
         vbox.addLayout(hbox3)
         vbox.addWidget(QLabel())
-        vbox.addLayout(Prot_vbox)
-        vbox.addStretch()
+        vbox.addLayout(hbox4)
+        vbox.addWidget(QLabel())
+        vbox.addWidget(QLabel("Copyright 2022. JUSEOK AHN<ajs3013@lguplus.co.kr> all rights reserved."))
+        # vbox.addStretch()
 
         self.setLayout(vbox)
         self.setWindowTitle('Dual SIM APDU Analyzer (beta)')

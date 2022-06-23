@@ -36,11 +36,14 @@ def process(input):
                         if exe_data[n][-4:-2] != '61':
                             cmd_type.append('Case3')
                 elif len(exe_data[n]) > 4:
-                    if exe_data[n][:2] == 'C0':
+                    if exe_data[n][:2] == 'C0' :
                         if exe_data[n][-4:-2] != '61':
                             cmd_type.append('Case4')
+                    elif exe_data[n][:2] == '60': # need to check '60' tag. (guess: response delay)
+                        if exe_data[n][-4:-2] != '61':
+                            cmd_type.append('Case60')
                     else:
-                        if prot_data_item[-1][:2] == prot_data_item[-2][2:4]:  # [INS]
+                        if exe_data[n][:2] == prot_data_item[-2][2:4]:  # [INS]
                             cmd_type.append('Case2')
 
         if len(cmd_type) > len(prot_type) : # cmd_type_appended
@@ -82,16 +85,25 @@ def rst(input):
 
     prot_rst = []
     if data[0]:
+        prot_rst.append('=' * 150)
         for n in range(len(data)):
             rst_time = msg_all[start[n]].split('  ')[1].split('  [')[0]
             if 'RX' in type[n]: rst_type = '[RX]'
             elif 'TX' in type[n]: rst_type = '[TX]'
-            rst_data = ''
-            for m in range(len(list(data[n]))):
-                if m%2 ==0 : rst_data += list(data[n])[m]
-                else: rst_data += list(data[n])[m] + ' '
-            prot_rst.append(rst_time + '  ' + rst_type + '  ' + rst_data)
 
+            rst_data = ''
+            cnt = 0
+            for m in range(len(list(data[n]))):
+                if m%2 ==0 :
+                    rst_data += list(data[n])[m]
+                    cnt +=1
+                else:
+                    rst_data += list(data[n])[m] + ' '
+                    cnt +=2
+                    if cnt%(150-5-len(rst_time)-len(rst_type)) == 0:
+                        rst_data += '\n' + ' '*(len(rst_time)+len(rst_type)+4)
+            prot_rst.append(rst_time + '  ' + rst_type + '  ' + rst_data)
+            prot_rst.append('=' * 150)
             if debug_mode:
                 print('rst_time :', rst_time)
                 print('rst_type :', rst_type)
