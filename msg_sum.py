@@ -1,5 +1,5 @@
 import apdu_parsing
-debug_mode = 1
+debug_mode = 2
 
 def rst(input):
     msg_all, prot_start, prot_type, prot_data = input
@@ -33,7 +33,7 @@ def rst(input):
                 sum_rst[-1] += ' (incomplete)'
             if sum_sw != '9000': sum_rst[-1] += ' ***'
 
-            if debug_mode:
+            if debug_mode == 1:
                 print('sum_time   :', sum_time)
                 print('sum_type   :', sum_type)
                 print('sum_ins    :', sum_ins)
@@ -41,6 +41,11 @@ def rst(input):
                 print('sum_detail :', sum_detail)
                 print('sum_sw     :', sum_sw)
                 print('')
+
+            if debug_mode == 2: # SELECTED FILE ID LIST
+                if sum_ins == 'A4':
+                    if len(prot_data[m]) > 2:
+                        print(prot_data[m][2])
 
     return sum_rst
 

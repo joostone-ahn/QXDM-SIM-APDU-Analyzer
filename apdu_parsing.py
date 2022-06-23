@@ -1,7 +1,11 @@
+import file_system
+
 def process(data, cmd):
     detail = ''
     if cmd == 'SELECT':
-        if len(data) == 2:
+        if len(data) < 3:
+            detail = 'Invalid length'
+        else:
             None
 
     return detail
