@@ -85,7 +85,7 @@ def rst(input):
 
     prot_rst = []
     if data[0]:
-        prot_rst.append('=' * 150)
+        prot_rst.append('-' * 150)
         for n in range(len(data)):
             rst_time = msg_all[start[n]].split('  ')[1].split('  [')[0]
             if 'RX' in type[n]: rst_type = '[RX]'
@@ -103,7 +103,7 @@ def rst(input):
                     if cnt%(150-5-len(rst_time)-len(rst_type)) == 0:
                         rst_data += '\n' + ' '*(len(rst_time)+len(rst_type)+4)
             prot_rst.append(rst_time + '  ' + rst_type + '  ' + rst_data)
-            prot_rst.append('=' * 150)
+            prot_rst.append('-' * 150)
             if debug_mode:
                 print('rst_time :', rst_time)
                 print('rst_type :', rst_type)

@@ -1,4 +1,48 @@
-file_name = dict()
 
-#
-file_name['A4'] = 'SELECT'
+# 31.102 Release16
+# MF, DF, ADF
+Cur_DF = dict()
+
+# [0:2] == 'A0'
+Cur_DF['A0000005591010FFFFFFFF8900000100'] = 'ISD-R'
+Cur_DF['A0000005591010FFFFFFFF8900000D00'] = 'ISD-PExecutableLoadFile'
+Cur_DF['A0000005591010FFFFFFFF8900000E00'] = 'ISD-PExecutableModule'
+Cur_DF['A0000005591010FFFFFFFF8900000200'] = 'ECASDApplication'
+Cur_DF['A0000000871002FF82FFFF89010000FF'] = 'ADF USIM'
+Cur_DF['A0000000871004FF82FFFF89010000FF'] = 'ADF ISIM'
+Cur_DF['A00000015141434C00'] = 'ARA'
+Cur_DF['A000000063504B43532D3135'] = 'ARA'
+
+# len() <= 4
+# == '3F00'
+Cur_DF['3F00'] = 'MF'
+# != '3F00'
+# EF of MF
+
+# len() > 4
+# [0:4] == '7F10', [4:6] == '5F'
+Cur_DF['7F105F3A'] = 'DF PHONEBOOK'
+Cur_DF['7F105F3B'] = 'DF MULTIMEDIA'
+Cur_DF['7F105F3D'] = 'DF MCS'
+Cur_DF['7F105F3E'] = 'DF V2X'
+# [4:6] != '5F'
+Cur_DF['7F10'] = 'DF TELECOM'
+
+# [0:4] == '7FFF', [4:6] == '5F'
+Cur_DF['7FFF5F3A'] = 'DF PHONEBOOK'
+Cur_DF['7FFF5F3B'] = 'DF GSM-ACCESS'
+Cur_DF['7FFF5F3C'] = 'DF MexE'
+Cur_DF['7FFF5F70'] = 'DF SoLSA'
+Cur_DF['7FFF5F40'] = 'DF WLAN'
+Cur_DF['7FFF5F50'] = 'DF HNB'
+Cur_DF['7FFF5F90'] = 'DF ProSe'
+Cur_DF['7FFF5FA0'] = 'DF ACDC'
+Cur_DF['7FFF5FB0'] = 'DF TV'
+Cur_DF['7FFF5FC0'] = 'DF 5GS'
+# [4:6] != '5F'
+# EF of Current ADF
+
+# 31.102 Release16
+# MF
+Cur_EF_1 = dict()
+Cur_EF_1[''] = ''

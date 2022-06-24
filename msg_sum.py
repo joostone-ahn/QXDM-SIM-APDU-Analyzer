@@ -1,10 +1,11 @@
 import apdu_parsing
-debug_mode = 2
+debug_mode = 0
 
 def rst(input):
     msg_all, prot_start, prot_type, prot_data = input
 
-    sum_rst = []
+    sum_rst, sum_DF, sum_EF = [],[],[]
+    sum_log_ch = [['','']] # log_ch[n] = [current DF, current EF]
     for m in range(len(prot_start)):
 
         sum_time = msg_all[prot_start[m][0]].split('  ')[1].split('  [')[0]
@@ -12,12 +13,13 @@ def rst(input):
 
         if sum_type != 'TX' and sum_type != 'RX':
             sum_rst.append(sum_time + '  ' + sum_type)
+            sum_DF.append('')
+            sum_EF.append('')
         else: # sum_type == 'TX'
             sum_ins = prot_data[m][0][2:4]
-
             if sum_ins in apdu_parsing.cmd_name:
                 sum_cmd = apdu_parsing.cmd_name[sum_ins]
-                sum_detail = apdu_parsing.process(prot_data[m], sum_cmd)
+                sum_detail, sum_log_ch = apdu_parsing.process(prot_data[m], sum_cmd, sum_log_ch)
             else:
                 sum_cmd = 'Unknown INS'
                 sum_detail = "'%s'"%sum_ins
@@ -47,5 +49,5 @@ def rst(input):
                     if len(prot_data[m]) > 2:
                         print(prot_data[m][2])
 
-    return sum_rst
+    return sum_rst, sum_log_ch
 

@@ -1,13 +1,102 @@
 import file_system
-
-def process(data, cmd):
+debug_mode = 0
+def process(data, cmd, log_ch):
     detail = ''
+    if debug_mode: print('=' * 50, '\n', log_ch)
     if cmd == 'SELECT':
         if len(data) < 3:
             detail = 'Invalid length'
-        else:
-            None
+        elif data[-1][-4:] == '9000':
+            if data[0][0] != '0' : # ETSI 102.221 Table 10.4a extended logical channels
+                log_ch_id = int(data[0][0:1])
+            else:
+                log_ch_id = int(data[0][1])
+            if log_ch_id > len(log_ch)-1:
+                for n in range(log_ch_id - len(log_ch)+1):
+                    log_ch.append(['',''])
 
+            file_id = data[2]
+            if file_id[0:2] == 'A0':
+                log_ch[log_ch_id][0] = file_id
+                log_ch[log_ch_id][1] = ''
+                log_ch[log_ch_id].append(file_id)
+                if len(log_ch[log_ch_id])>3: del log_ch[log_ch_id][-1]
+            else:
+                if len(file_id) <= 4:
+                    if file_id == '3F00':
+                        log_ch[log_ch_id][0] = file_id
+                        log_ch[log_ch_id][1] = ''
+                    elif file_id == '7FFF':
+                        if len(log_ch[log_ch_id]) == 3:
+                            log_ch[log_ch_id][0] = log_ch[log_ch_id][2]
+                        else: # not available to detect last selected AID
+                            log_ch[log_ch_id][0] = 'A0000000871002FF82FFFF89010000FF'
+                            # selecting USIM ADF by default
+                            if log_ch_id >= 1:
+                                log_ch[log_ch_id][0] = 'A0000000871004FF82FFFF89010000FF'
+                                # selecting ISIM ADF as secondary
+                        log_ch[log_ch_id][1] = ''
+                    else:
+                        log_ch[log_ch_id][1] = file_id
+                else:
+                    if file_id[0:4] == '7F10':
+                        if file_id[4:6] == '5F':
+                            log_ch[log_ch_id][0] = file_id[0:8]
+                            if len(file_id) > 8:
+                                log_ch[log_ch_id][1] = file_id[8:12]
+                            else:
+                                log_ch[log_ch_id][1] = ''
+                        else:
+                            log_ch[log_ch_id][0] = file_id[0:4]
+                            if len(file_id) > 4:
+                                log_ch[log_ch_id][1] = file_id[4:8]
+                            else:
+                                log_ch[log_ch_id][1] = ''
+                    elif file_id[0:4] == '7FFF':
+                        if '7F10' in log_ch[log_ch_id][0]:
+                            if len(log_ch[log_ch_id]) == 3:
+                                log_ch[log_ch_id][0] = log_ch[log_ch_id][2]
+                            else: # assuming DF TELECOM and USIM ADF use same logical channel
+                                log_ch[log_ch_id][0] = 'A0000000871002FF82FFFF89010000FF'
+                        if file_id[4:6] == '5F':
+                            log_ch[log_ch_id][0] = file_id[0:8]
+                            if len(file_id) > 8:
+                                log_ch[log_ch_id][1] = file_id[8:12]
+                            else:
+                                log_ch[log_ch_id][1] = ''
+                        else: # current ADF
+                            log_ch[log_ch_id][1] = file_id[4:8]
+                            if '3F00' in log_ch[log_ch_id][0] or '7FFF5F' in log_ch[log_ch_id][0]:
+                                if len(log_ch[log_ch_id]) == 3:
+                                    log_ch[log_ch_id][0] = log_ch[log_ch_id][2]
+                                else: # assuming MF and USIM ADF use same logical channel
+                                    log_ch[log_ch_id][0] = 'A0000000871002FF82FFFF89010000FF'
+
+            if debug_mode :
+                print('=' * 50)
+                print('prot_data  :', data[0][0:2], data[2])
+                print('current_DF :', log_ch[log_ch_id][0])
+                print('current_EF :', log_ch[log_ch_id][1])
+
+    # elif cmd == 'STORE DATA':
+    #     if data[-1][-4:] == '9000':
+    #         if data[0][0] == '8' : # ETSI 102.221 Table 10.3 Structured as for '0X'
+    #             log_ch_id = int(data[0][1])
+    #         if log_ch_id > len(log_ch)-1:
+    #             for n in range(log_ch_id - len(log_ch)+1):
+    #                 log_ch.append(['',''])
+    #         if log_ch[log_ch_id][0] == '':
+    #             print("OK")
+    #             log_ch[log_ch_id][0] = 'A0000005591010FFFFFFFF8900000100'
+
+    return detail, log_ch
+
+cmd_name = dict()
+
+def detail(data, cmd):
+    detail = ''
+    if cmd == 'SELECT':
+        data
     return detail
 
 cmd_name = dict()
