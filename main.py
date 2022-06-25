@@ -142,6 +142,9 @@ class Basic_GUI(QWidget):
 
     @pyqtSlot()
     def load_msg(self):
+        self.SUM_list.clear()
+        self.App_list.clear()
+        self.Prot_list.clear()
         fname = QFileDialog.getOpenFileName(self,'Load file','',"Text files(*.txt)")
         opened_file = fname[0]
         if fname[0]:
@@ -167,10 +170,6 @@ class Basic_GUI(QWidget):
             print('msg_type  :', len(self.msg_type), self.msg_type)
             print('msg_data  :', len(self.msg_data), self.msg_data)
             print()
-
-        self.SUM_list.clear()
-        self.App_list.clear()
-        self.Prot_list.clear()
 
     @pyqtSlot()
     def exe_msg(self):
@@ -207,7 +206,7 @@ class Basic_GUI(QWidget):
             print()
 
         sum_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data
-        self.sum_rst, self.sum_log_ch = msg_sum.rst(sum_input)
+        self.sum_rst, self.sum_log_ch, self.sum_abnormal = msg_sum.rst(sum_input)
         for n in self.sum_rst:
             self.SUM_list.addItem(n)
 
