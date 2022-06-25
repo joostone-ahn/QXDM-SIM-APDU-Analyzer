@@ -1,12 +1,6 @@
-def process(data, cmd):
-    detail = ''
-    if cmd == 'SELECT':
-        if len(data) == 2:
-            None
-
-    return detail
-
 cmd_name = dict()
+
+# ETSI ts102.221
 cmd_name['A4'] = 'SELECT'
 cmd_name['F2'] = 'STATUS'
 cmd_name['B0'] = 'READ BINARY'
@@ -37,3 +31,23 @@ cmd_name['73'] = 'MANAGE SECURE CHANNEL'
 cmd_name['75'] = 'TRANSACT DATA'
 cmd_name['76'] = 'SUSPEND UICC'
 cmd_name['78'] = 'GET IDENTITY'
+
+# Global Platform v2.3.1
+cmd_name['E4'] = 'DELETE'
+cmd_name['CA'] = 'GET DATA'
+cmd_name['CB'] = 'GET DATA'
+cmd_name['F2'] = 'GET STATUS'
+cmd_name['E6'] = 'INSTALL'
+cmd_name['E8'] = 'LOAD'
+cmd_name['D8'] = 'PUT KEY'
+cmd_name['F0'] = 'SET STATUS'
+cmd_name['E2'] = 'STORE DATA'
+
+# # ISO7816-4
+# cmd_name['D0'] = 'WRITE BIRARY'
+# cmd_name['0E'] = 'ERASE BIRARY'
+# cmd_name['D2'] = 'WRITE RECORD'
+# cmd_name['E2'] = 'APPEND RECORD'
+# cmd_name['CA'] = 'GET DATA'
+# cmd_name['DA'] = 'PUT DATA'
+# cmd_name['B4'] = 'GET CHALLENGE'

@@ -25,9 +25,9 @@ class Basic_GUI(QWidget):
 
     def initUI(self):
 
-        self.open_btn = QPushButton("File Open")
+        self.open_btn = QPushButton("Open")
         self.open_btn.setFont(CourierNewFont)
-        self.open_btn.setFixedWidth(150)
+        self.open_btn.setFixedWidth(100)
         self.open_btn.setCheckable(False)
 
         self.open_btn.clicked.connect(self.load_msg)
@@ -37,26 +37,37 @@ class Basic_GUI(QWidget):
         hbox1 = QHBoxLayout()
         hbox1.addWidget(self.open_btn)
         hbox1.addWidget(self.opened_label)
-        hbox1.addStretch()
+        # hbox1.addStretch()
 
         self.comb_box = QComboBox()
-        self.comb_box.addItem("SIM Port1")
-        self.comb_box.addItem("SIM Port2")
-        self.comb_box.setFixedWidth(150)
+        self.comb_box.addItem("SIM1")
+        self.comb_box.addItem("SIM2")
+        self.comb_box.setFixedWidth(100)
         self.comb_box.setFont(CourierNewFont)
 
         self.exe_btn = QPushButton("Execute")
-        self.exe_btn.setFixedWidth(150)
+        self.exe_btn.setFixedWidth(100)
         self.exe_btn.setCheckable(False)
         self.exe_btn.setFont(CourierNewFont)
         self.exe_btn.setDisabled(True)
 
         self.exe_btn.clicked.connect(self.exe_msg)
 
+        self.save_btn = QPushButton("Save")
+        self.save_btn.setFixedWidth(100)
+        self.save_btn.setCheckable(False)
+        self.save_btn.setFont(CourierNewFont)
+        self.save_btn.setDisabled(True)
+
+        self.save_btn.clicked.connect(self.save_msg)
+
+        self.saved_label = QLabel()
 
         hbox2 = QHBoxLayout()
         hbox2.addWidget(self.comb_box)
         hbox2.addWidget(self.exe_btn)
+        hbox2.addWidget(self.save_btn)
+        hbox2.addWidget(self.saved_label)
         hbox2.addStretch()
 
         self.SUM_label = QLabel()
@@ -64,16 +75,15 @@ class Basic_GUI(QWidget):
         self.SUM_label.setFont(CourierNewFont)
         self.SUM_list = QListWidget()
         self.SUM_list.setAutoScroll(True)
-        self.SUM_list.setFixedWidth(500)
         self.SUM_list.setFixedHeight(500)
+        self.SUM_list.setFixedWidth(500)
         self.SUM_list.setFont(CourierNewFont)
-
-        self.SUM_list.itemClicked.connect(self.clicked_rst)
-        self.SUM_list.itemSelectionChanged.connect(self.clicked_rst)
-
         SUM_vbox = QVBoxLayout()
         SUM_vbox.addWidget(self.SUM_label)
         SUM_vbox.addWidget(self.SUM_list)
+
+        self.SUM_list.itemClicked.connect(self.clicked_rst)
+        self.SUM_list.itemSelectionChanged.connect(self.clicked_rst)
 
         self.App_label = QLabel()
         self.App_label.setText("Application-Level Analysis")
@@ -88,16 +98,32 @@ class Basic_GUI(QWidget):
         hbox3 = QHBoxLayout()
         hbox3.addLayout(SUM_vbox)
         hbox3.addLayout(App_vbox)
+        # hbox3.addStretch()
+
+        self.SUM_File_label = QLabel()
+        self.SUM_File_label.setText("EF_FILE SUMMARY (TBD)")
+        self.SUM_File_label.setFont(CourierNewFont)
+        self.SUM_File_list = QListWidget()
+        self.SUM_File_list.setAutoScroll(True)
+        self.SUM_File_list.setFixedWidth(500)
+        self.SUM_File_list.setFont(CourierNewFont)
+        SUM_File_vbox = QVBoxLayout()
+        SUM_File_vbox.addWidget(self.SUM_File_label)
+        SUM_File_vbox.addWidget(self.SUM_File_list)
 
         self.Prot_label = QLabel()
         self.Prot_label.setText("Protocol-Level Analysis")
         self.Prot_label.setFont(CourierNewFont)
         self.Prot_list = QTextBrowser()
-        self.Prot_list.setFixedHeight(250)
         self.Prot_list.setFont(CourierNewFont)
         Prot_vbox = QVBoxLayout()
         Prot_vbox.addWidget(self.Prot_label)
         Prot_vbox.addWidget(self.Prot_list)
+
+        hbox4 = QHBoxLayout()
+        hbox4.addLayout(SUM_File_vbox)
+        hbox4.addLayout(Prot_vbox)
+        # hbox4.addStretch()
 
         vbox = QVBoxLayout()
         vbox.addLayout(hbox1)
@@ -105,8 +131,10 @@ class Basic_GUI(QWidget):
         vbox.addWidget(QLabel())
         vbox.addLayout(hbox3)
         vbox.addWidget(QLabel())
-        vbox.addLayout(Prot_vbox)
-        vbox.addStretch()
+        vbox.addLayout(hbox4)
+        vbox.addWidget(QLabel())
+        vbox.addWidget(QLabel("Copyright 2022. JUSEOK AHN<ajs3013@lguplus.co.kr> all rights reserved."))
+        # vbox.addStretch()
 
         self.setLayout(vbox)
         self.setWindowTitle('Dual SIM APDU Analyzer (beta)')
@@ -114,6 +142,9 @@ class Basic_GUI(QWidget):
 
     @pyqtSlot()
     def load_msg(self):
+        self.SUM_list.clear()
+        self.App_list.clear()
+        self.Prot_list.clear()
         fname = QFileDialog.getOpenFileName(self,'Load file','',"Text files(*.txt)")
         opened_file = fname[0]
         if fname[0]:
@@ -139,10 +170,6 @@ class Basic_GUI(QWidget):
             print('msg_type  :', len(self.msg_type), self.msg_type)
             print('msg_data  :', len(self.msg_data), self.msg_data)
             print()
-
-        self.SUM_list.clear()
-        self.App_list.clear()
-        self.Prot_list.clear()
 
     @pyqtSlot()
     def exe_msg(self):
@@ -179,7 +206,7 @@ class Basic_GUI(QWidget):
             print()
 
         sum_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data
-        self.sum_rst = msg_sum.rst(sum_input)
+        self.sum_rst, self.sum_log_ch, self.sum_abnormal = msg_sum.rst(sum_input)
         for n in self.sum_rst:
             self.SUM_list.addItem(n)
 
@@ -188,6 +215,7 @@ class Basic_GUI(QWidget):
             print('sum_rst    :', len(self.sum_rst), self.sum_rst)
             print()
 
+        self.save_btn.setEnabled(True)
 
     @pyqtSlot()
     def clicked_rst(self):
@@ -209,6 +237,29 @@ class Basic_GUI(QWidget):
         for n in app_rst:
             app_rst_show +=n +'\n'
         self.App_list.setPlainText(app_rst_show)
+
+    @pyqtSlot()
+    def save_msg(self):
+        save_contents =''
+
+        for n in range(len(self.sum_rst)):
+            save_contents += '='*150 + '\n'
+            save_contents += self.sum_rst[n] + '\n'
+            save_contents += '='*150 + '\n'
+            prot_rst_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data, n
+            prot_rst = msg_prot.rst(prot_rst_input)
+            for m in prot_rst[1:]:
+                save_contents += m +'\n'
+            save_contents += '\n'
+
+        save_path = QFileDialog.getSaveFileName(self,'Save file','',"Text files(*.txt)")
+        fp = open(save_path[0], "w")
+        fp.write(save_contents)
+        fp.close()
+
+        self.saved_label.setText(save_path[0])
+        self.save_btn.setDisabled(True)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
