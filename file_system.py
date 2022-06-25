@@ -6,9 +6,14 @@ DF_name['A0000005591010FFFFFFFF8900000D00'] = 'ISD-PExecutableLoadFile'
 DF_name['A0000005591010FFFFFFFF8900000E00'] = 'ISD-PExecutableModule'
 DF_name['A0000005591010FFFFFFFF8900000200'] = 'ECASDApplication'
 
-# Android https://source.android.com/devices/tech/config/uicc?hl=ko
-DF_name['A00000015141434C00'] = 'ARA'
-DF_name['A000000063504B43532D3135'] = 'ARA'
+# Android UICC Carrier Privilege
+# https://source.android.com/devices/tech/config/uicc?hl=ko
+# https://android.googlesource.com/platform/frameworks/opt/telephony/+/master/src/java/com/android/internal/telephony/uicc/UiccCarrierPrivilegeRules.java
+# https://android.googlesource.com/platform/frameworks/opt/telephony/+/master/tests/telephonytests/src/com/android/internal/telephony/uicc/UiccCarrierPrivilegeRulesTest.java?autodive=0%2F%2F
+DF_name['A000000063504B43532D3135'] = 'ARA-M'
+DF_name['A00000015141434C00'] = 'ARA-M'
+DF_name['A00000015144414300'] = 'ARA-D'
+DF_name['A000000063504B43532D3135'] = 'PKCS15'
 
 # 3GPP ts31.102 Release16
 DF_name['3F00'] = 'MF'
