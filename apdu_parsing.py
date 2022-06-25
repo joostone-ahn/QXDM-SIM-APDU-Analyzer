@@ -2,19 +2,18 @@ import file_system
 debug_mode = 0
 def process(data, cmd, log_ch):
     detail = ''
-    if debug_mode: print('=' * 50, '\n', log_ch)
+    if data[0][0] == '4':  # ETSI 102.221 Table 10.4a extended logical channels
+        log_ch_id = 16 # excluding 00~0F
+    else:
+        log_ch_id = int(data[0][1])
+    if log_ch_id > len(log_ch) - 1:
+        for n in range(log_ch_id - len(log_ch) + 1):
+            log_ch.append(['N/A','N/A'])
+
     if cmd == 'SELECT':
         if len(data) < 3:
             detail = 'Invalid length'
         elif data[-1][-4:] == '9000':
-            if data[0][0] != '0' : # ETSI 102.221 Table 10.4a extended logical channels
-                log_ch_id = int(data[0][0:1])
-            else:
-                log_ch_id = int(data[0][1])
-            if log_ch_id > len(log_ch)-1:
-                for n in range(log_ch_id - len(log_ch)+1):
-                    log_ch.append(['',''])
-
             file_id = data[2]
             if file_id[0:2] == 'A0':
                 log_ch[log_ch_id][0] = file_id
@@ -27,15 +26,11 @@ def process(data, cmd, log_ch):
                         log_ch[log_ch_id][0] = file_id
                         log_ch[log_ch_id][1] = ''
                     elif file_id == '7FFF':
+                        log_ch[log_ch_id][1] = ''
                         if len(log_ch[log_ch_id]) == 3:
                             log_ch[log_ch_id][0] = log_ch[log_ch_id][2]
-                        else: # not available to detect last selected AID
-                            log_ch[log_ch_id][0] = 'A0000000871002FF82FFFF89010000FF'
-                            # selecting USIM ADF by default
-                            if log_ch_id >= 1:
-                                log_ch[log_ch_id][0] = 'A0000000871004FF82FFFF89010000FF'
-                                # selecting ISIM ADF as secondary
-                        log_ch[log_ch_id][1] = ''
+                        else: # last selected AID not available
+                            log_ch[log_ch_id][0] = 'USIM or ISIM ADF'
                     else:
                         log_ch[log_ch_id][1] = file_id
                 else:
@@ -53,11 +48,6 @@ def process(data, cmd, log_ch):
                             else:
                                 log_ch[log_ch_id][1] = ''
                     elif file_id[0:4] == '7FFF':
-                        if '7F10' in log_ch[log_ch_id][0]:
-                            if len(log_ch[log_ch_id]) == 3:
-                                log_ch[log_ch_id][0] = log_ch[log_ch_id][2]
-                            else: # assuming DF TELECOM and USIM ADF use same logical channel
-                                log_ch[log_ch_id][0] = 'A0000000871002FF82FFFF89010000FF'
                         if file_id[4:6] == '5F':
                             log_ch[log_ch_id][0] = file_id[0:8]
                             if len(file_id) > 8:
@@ -66,11 +56,19 @@ def process(data, cmd, log_ch):
                                 log_ch[log_ch_id][1] = ''
                         else: # current ADF
                             log_ch[log_ch_id][1] = file_id[4:8]
-                            if '3F00' in log_ch[log_ch_id][0] or '7FFF5F' in log_ch[log_ch_id][0]:
-                                if len(log_ch[log_ch_id]) == 3:
-                                    log_ch[log_ch_id][0] = log_ch[log_ch_id][2]
-                                else: # assuming MF and USIM ADF use same logical channel
+                            if len(log_ch[log_ch_id]) == 3:
+                                log_ch[log_ch_id][0] = log_ch[log_ch_id][2]
+                            else:
+                                if log_ch[log_ch_id][0] == '3F00' or '7F10' in log_ch[log_ch_id][0] :
                                     log_ch[log_ch_id][0] = 'A0000000871002FF82FFFF89010000FF'
+                                    # MF and DF TELECOM use same logical channel with USIM ADF
+                                elif '7FFF5F' in log_ch[log_ch_id][0]:
+                                    log_ch[log_ch_id][0] = 'A0000000871002FF82FFFF89010000FF'
+                                    # child DF not defined in ISIM ADF, select USIM ADF by default
+                                else:
+                                    log_ch[log_ch_id][0] = 'USIM or ISIM ADF'
+                                    # last selected AID not available
+                                    # TBD ISIM EF 여부 확인 후 USIM ISIM 결정
 
             if debug_mode :
                 print('=' * 50)

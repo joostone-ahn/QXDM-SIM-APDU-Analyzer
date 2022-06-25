@@ -75,17 +75,12 @@ class Basic_GUI(QWidget):
         self.SUM_label.setFont(CourierNewFont)
         self.SUM_list = QListWidget()
         self.SUM_list.setAutoScroll(True)
-        self.SUM_list.setFixedHeight(450)
+        self.SUM_list.setFixedHeight(500)
         self.SUM_list.setFixedWidth(500)
         self.SUM_list.setFont(CourierNewFont)
-        self.SUM_current = QTextBrowser()
-        self.SUM_current.setFixedHeight(44)
-        self.SUM_current.setFixedWidth(500)
-        self.SUM_current.setFont(CourierNewFont)
         SUM_vbox = QVBoxLayout()
         SUM_vbox.addWidget(self.SUM_label)
         SUM_vbox.addWidget(self.SUM_list)
-        SUM_vbox.addWidget(self.SUM_current)
 
         self.SUM_list.itemClicked.connect(self.clicked_rst)
         self.SUM_list.itemSelectionChanged.connect(self.clicked_rst)
@@ -236,10 +231,6 @@ class Basic_GUI(QWidget):
         for n in prot_rst:
             prot_rst_show +=n +'\n'
         self.Prot_list.setPlainText(prot_rst_show)
-
-        # SELECT, READ only
-        # self.sum_log_ch[item_num]
-        # self.SUM_current.setPlainText()
 
         app_rst_input = self.msg_all, self.prot_start, self.prot_end, item_num
         app_rst = msg_app.rst(app_rst_input)

@@ -31,7 +31,8 @@ def process(input):
             elif exe_type[n] == 'RX':
                 if len(exe_data[n]) == 4:
                     if cmd_cnt == 1:
-                        cmd_type.append('Case1')
+                        if exe_data[n][-4:-2] != '6C': # case2
+                            cmd_type.append('Case1')
                     elif cmd_cnt > 1:
                         if exe_data[n][-4:-2] != '61':
                             cmd_type.append('Case3')
