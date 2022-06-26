@@ -9,6 +9,7 @@ def rst(input):
     sum_rst, sum_log_ch, sum_log_ch_id, sum_error = [], [], [], []
     log_ch = [['','']] # log_ch[n] = [current DF, current EF]
 
+    last_file_id = ''
     for m in range(len(prot_start)):
         file_name, error = '', ''
         num_max = len(str(len(prot_start)))+1 # including '['
@@ -45,7 +46,7 @@ def rst(input):
                         log_ch, file_name, error = SELECT.process(prot_data[m], log_ch, log_ch_id)
                         last_file_id = prot_data[m][2]
                     else:
-                        file_name = ' [N/A]'
+                        file_name = '[N/A]'
                         error = '(3) Incomplete APDU'
                 elif ins in short_file_id.cmd_SFI_list :
                     file_name, error = file_system.process(log_ch[log_ch_id][0], log_ch[log_ch_id][1], last_file_id)

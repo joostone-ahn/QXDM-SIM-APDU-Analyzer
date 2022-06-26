@@ -24,7 +24,7 @@ def process(current_DF, current_EF, file_id):
         else:
             file_name = file_id #'7FFF'
             error = '(2) Last selected AID not decided'
-    file_name = '[' + file_name + ']'
+    if file_name: file_name = '[' + file_name + ']'
     return file_name, error
 
 

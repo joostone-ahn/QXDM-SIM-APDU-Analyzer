@@ -23,7 +23,10 @@ def process(data, log_ch, log_ch_id):
                 if len(log_ch[log_ch_id]) == 3:
                     log_ch[log_ch_id][0] = log_ch[log_ch_id][2]
                 else:
-                    log_ch[log_ch_id][0] = '' # Last selected AID not decided
+                    if data[-1][-4:] == '9000' or data[-1][-4:-2] == '91':
+                        log_ch[log_ch_id][0] = data[-1][18:50]
+                    else:
+                        log_ch[log_ch_id][0] = '' # Last selected AID not decided
             else:
                 log_ch[log_ch_id][0] = file_id
                 log_ch[log_ch_id][1] = file_id
