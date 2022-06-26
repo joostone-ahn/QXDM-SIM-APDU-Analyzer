@@ -224,15 +224,15 @@ class Basic_GUI(QWidget):
 
         item_num = self.SUM_list.currentRow()
 
-        prot_rst_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data, item_num
-        prot_rst = msg_prot.rst(prot_rst_input)
+        prot_rst_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data
+        prot_rst = msg_prot.rst(prot_rst_input, item_num)
         prot_rst_show = ''
         for n in prot_rst:
             prot_rst_show +=n +'\n'
         self.Prot_list.setPlainText(prot_rst_show)
 
-        app_rst_input = self.msg_all, self.prot_start, self.prot_end, item_num
-        app_rst = msg_app.rst(app_rst_input)
+        app_rst_input = self.msg_all, self.prot_start, self.prot_end, self.prot_type, self.sum_log_ch
+        app_rst = msg_app.rst(app_rst_input, item_num)
         app_rst_show = ''
         for n in app_rst:
             app_rst_show +=n +'\n'
