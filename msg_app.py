@@ -1,7 +1,7 @@
 import file_system
 
-def rst(input, item_num):
-    msg_all, prot_start, prot_end, prot_type, log_ch = input
+def rst(input1, input2, item_num):
+    msg_all, prot_start, prot_end = input1
     start = prot_start[item_num]
     end = prot_end[item_num]
 
@@ -14,18 +14,23 @@ def rst(input, item_num):
                 if app_rst[-1] == '' or app_rst[-1] == '  ' : del app_rst[-1]
     if app_rst: app_rst.append('-' * 150)
 
+    prot_type, log_ch, log_ch_id = input2
     if prot_type[item_num][0] == 'TX':
-        current_dir = []
-        current_dir.append('=' * 150)
+        current_dir = ['=' * 150]
+        current_dir.append('Logical CH : %s'%str(log_ch_id[item_num]))
+        if log_ch_id[item_num] >= 4: current_dir[-1] += ' (Extended)'
+
         current_dir.append('Current DF : %s'%log_ch[item_num][0])
         if log_ch[item_num][0]:
             if log_ch[item_num][0] in file_system.DF_name:
                 current_dir[-1] += ' (' + file_system.DF_name[log_ch[item_num][0]] + ')'
+
         current_dir.append('Current EF : %s'%log_ch[item_num][1])
         if log_ch[item_num][0] and log_ch[item_num][1]:
             if log_ch[item_num][0] in file_system.DF_name:
                 if log_ch[item_num][1] in file_system.EF_name[log_ch[item_num][0]]:
                     current_dir[-1] += ' (' + file_system.EF_name[log_ch[item_num][0]][log_ch[item_num][1]] + ')'
+
         current_dir.append('=' * 150)
         app_rst = current_dir + app_rst
 
