@@ -206,7 +206,7 @@ class Basic_GUI(QWidget):
             print()
 
         sum_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data
-        self.sum_rst, self.sum_log_ch, self.sum_log_ch_id, self.sum_abnormal = msg_sum.rst(sum_input)
+        self.sum_rst, self.sum_log_ch, self.sum_log_ch_id, self.sum_error = msg_sum.rst(sum_input)
         for n in self.sum_rst:
             self.SUM_list.addItem(n)
 
@@ -215,7 +215,7 @@ class Basic_GUI(QWidget):
             print('sum_rst       :', len(self.sum_rst), self.sum_rst)
             print('sum_log_ch    :', len(self.sum_log_ch), self.sum_log_ch)
             print('sum_log_ch_id :', len(self.sum_log_ch_id), self.sum_log_ch_id)
-            print('sum_abnormal  :', len(self.sum_abnormal), self.sum_abnormal)
+            print('sum_error     :', len(self.sum_error), self.sum_error)
             print()
 
         self.save_btn.setEnabled(True)
