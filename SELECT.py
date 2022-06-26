@@ -72,31 +72,7 @@ def process(data, log_ch, log_ch_id):
         if len(log_ch[log_ch_id]) < 3:
             log_ch[log_ch_id].append(log_ch[log_ch_id][0])
 
-    abnormal_msg = ''
-    if log_ch[log_ch_id][1]:
-        if log_ch[log_ch_id][0]:
-            if log_ch[log_ch_id][0] in file_system.DF_name:
-                if log_ch[log_ch_id][1] in file_system.EF_name[log_ch[log_ch_id][0]]:
-                    file_name = file_system.EF_name[log_ch[log_ch_id][0]][log_ch[log_ch_id][1]]
-                else:
-                    file_name = file_id
-                    abnormal_msg = '(1) Non-standard'
-            else:
-                file_name = file_id
-                abnormal_msg = '(1) Non-standard'
-        else:
-            file_name = file_id #'7FFFXXXX'
-            abnormal_msg = '(2) Last selected AID not decided'
-    else:
-        if log_ch[log_ch_id][0]:
-            if log_ch[log_ch_id][0] in file_system.DF_name:
-                file_name = file_system.DF_name[log_ch[log_ch_id][0]]
-            else:
-                file_name = file_id
-                abnormal_msg = '(1) Non-standard'
-        else:
-            file_name = file_id #'7FFF'
-            abnormal_msg = '(2) Last selected AID not decided'
+    file_name, error = file_system.process(log_ch[log_ch_id][0], log_ch[log_ch_id][1], file_id)
 
     if debug_mode == 1:
         print('prot_data    :', data[0][0:2], data[2])
@@ -108,12 +84,10 @@ def process(data, log_ch, log_ch_id):
     if data[-1][-4:] != '9000' and data[-1][-4:-2] != '91':
         log_ch[log_ch_id][0] = log_ch_prev_0
         log_ch[log_ch_id][1] = log_ch_prev_1
-        abnormal_msg = '(SW:' + data[-1][-4:] + ') ' + abnormal_msg
+        error = '(SW:' + data[-1][-4:] + ') ' + error
 
     if debug_mode == 1:
-        print('abnormal_msg :', abnormal_msg)
+        print('error        :', error)
         print()
 
-    file_name = '[' + file_name + ']'
-
-    return log_ch, file_name, abnormal_msg
+    return log_ch, file_name, error
