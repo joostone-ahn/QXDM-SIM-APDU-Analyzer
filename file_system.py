@@ -326,14 +326,6 @@ EF_name ={
     }
 }
 
-DF_list = []
-for n in DF_name.keys():
-    DF_list.append(n)
-
-MF_EF_list = []
-for n in EF_name['3F00'].keys():
-    MF_EF_list.append(n)
-
 USIM_EF_list = []
 for n in EF_name['A0000000871002FF82FFFF89010000FF'].keys():
     USIM_EF_list.append(n)

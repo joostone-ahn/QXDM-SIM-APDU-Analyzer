@@ -2,17 +2,20 @@ import file_system
 debug_mode = 0
 
 def process(data, log_ch, log_ch_id):
-    log_ch_prev = log_ch
+    if data[-1][-4:] != '9000' and data[-1][-4:-2] != '91':
+        log_ch_prev_0 = log_ch[log_ch_id][0]
+        log_ch_prev_1 = log_ch[log_ch_id][1]
+
     file_id = data[2]
     if file_id[0:2] == 'A0':
         log_ch[log_ch_id][0] = file_id
         log_ch[log_ch_id][1] = ''
     else:
         if len(file_id) <= 4:
-            if file_id in file_system.DF_list: # MF or DF(7F10)
+            if file_id in file_system.DF_name: # MF or DF(7F10)
                 log_ch[log_ch_id][0] = file_id
                 log_ch[log_ch_id][1] = ''
-            elif file_id in file_system.MF_EF_list: # MF's child EF
+            elif file_id in file_system.EF_name['3F00']: # MF's child EF
                 log_ch[log_ch_id][0] = '3F00'
                 log_ch[log_ch_id][1] = file_id
             elif file_id == '7FFF':
@@ -72,7 +75,7 @@ def process(data, log_ch, log_ch_id):
     abnormal_msg = ''
     if log_ch[log_ch_id][1]:
         if log_ch[log_ch_id][0]:
-            if log_ch[log_ch_id][0] in file_system.DF_list:
+            if log_ch[log_ch_id][0] in file_system.DF_name:
                 if log_ch[log_ch_id][1] in file_system.EF_name[log_ch[log_ch_id][0]]:
                     file_name = file_system.EF_name[log_ch[log_ch_id][0]][log_ch[log_ch_id][1]]
                 else:
@@ -86,7 +89,7 @@ def process(data, log_ch, log_ch_id):
             abnormal_msg = '(2) Last selected AID not decided'
     else:
         if log_ch[log_ch_id][0]:
-            if log_ch[log_ch_id][0] in file_system.DF_list:
+            if log_ch[log_ch_id][0] in file_system.DF_name:
                 file_name = file_system.DF_name[log_ch[log_ch_id][0]]
             else:
                 file_name = file_id
@@ -103,13 +106,14 @@ def process(data, log_ch, log_ch_id):
         print('file_name    :', file_name)
 
     if data[-1][-4:] != '9000' and data[-1][-4:-2] != '91':
-        log_ch = log_ch_prev
+        log_ch[log_ch_id][0] = log_ch_prev_0
+        log_ch[log_ch_id][1] = log_ch_prev_1
         abnormal_msg = '(SW:' + data[-1][-4:] + ') ' + abnormal_msg
 
     if debug_mode == 1:
         print('abnormal_msg :', abnormal_msg)
         print()
 
-    file_name = ' [' + file_name + ']'
+    file_name = '[' + file_name + ']'
 
     return log_ch, file_name, abnormal_msg

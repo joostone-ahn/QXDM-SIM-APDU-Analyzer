@@ -206,13 +206,16 @@ class Basic_GUI(QWidget):
             print()
 
         sum_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data
-        self.sum_rst, self.sum_log_ch, self.sum_abnormal = msg_sum.rst(sum_input)
+        self.sum_rst, self.sum_log_ch, self.sum_log_ch_id, self.sum_abnormal = msg_sum.rst(sum_input)
         for n in self.sum_rst:
             self.SUM_list.addItem(n)
 
         if debug_mode :
             print('[ SUMMARY FILTER ]')
-            print('sum_rst    :', len(self.sum_rst), self.sum_rst)
+            print('sum_rst       :', len(self.sum_rst), self.sum_rst)
+            print('sum_log_ch    :', len(self.sum_log_ch), self.sum_log_ch)
+            print('sum_log_ch_id :', len(self.sum_log_ch_id), self.sum_log_ch_id)
+            print('sum_abnormal  :', len(self.sum_abnormal), self.sum_abnormal)
             print()
 
         self.save_btn.setEnabled(True)
@@ -224,15 +227,16 @@ class Basic_GUI(QWidget):
 
         item_num = self.SUM_list.currentRow()
 
-        prot_rst_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data, item_num
-        prot_rst = msg_prot.rst(prot_rst_input)
+        prot_rst_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data
+        prot_rst = msg_prot.rst(prot_rst_input, item_num)
         prot_rst_show = ''
         for n in prot_rst:
             prot_rst_show +=n +'\n'
         self.Prot_list.setPlainText(prot_rst_show)
 
-        app_rst_input = self.msg_all, self.prot_start, self.prot_end, item_num
-        app_rst = msg_app.rst(app_rst_input)
+        app_rst_input1 = self.msg_all, self.prot_start, self.prot_end
+        app_rst_input2 = self.prot_type, self.sum_log_ch, self.sum_log_ch_id
+        app_rst = msg_app.rst(app_rst_input1, app_rst_input2, item_num)
         app_rst_show = ''
         for n in app_rst:
             app_rst_show +=n +'\n'

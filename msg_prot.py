@@ -78,8 +78,8 @@ def process(input):
     return prot_start, prot_end, prot_type, prot_data
 
 
-def rst(input):
-    msg_all, prot_start, prot_type, prot_data, item_num = input
+def rst(input, item_num):
+    msg_all, prot_start, prot_type, prot_data = input
     start = prot_start[item_num]
     type = prot_type[item_num]
     data = prot_data[item_num]
