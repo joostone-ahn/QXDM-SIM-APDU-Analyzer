@@ -50,7 +50,7 @@ def process(log_ch, log_ch_id, SFI):
         log_ch[log_ch_id][1] = file_id
     else:
         file_name = "[Unknown]"
-        file_id = 'SFI:%s'%SFI + ' (Unknown)'
+        file_id = "%s(SFI)"%SFI + ' [Unknown]'
         log_ch[log_ch_id][1] = file_id
         error = '*Non-standard'
 

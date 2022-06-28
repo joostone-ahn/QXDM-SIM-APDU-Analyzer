@@ -18,18 +18,18 @@ def rst(input1, input2, item_num):
     if prot_type[item_num][0] == 'TX':
         current_dir = ['=' * 150]
         current_dir.append('Logical CH : %s'%str(log_ch_id[item_num]))
-        if log_ch_id[item_num] >= 4: current_dir[-1] += ' (Extended)'
+        if log_ch_id[item_num] >= 4: current_dir[-1] += ' [Extended]'
 
         current_dir.append('Current DF : %s'%log_ch[item_num][0])
         if log_ch[item_num][0]:
             if log_ch[item_num][0] in file_system.DF_name:
-                current_dir[-1] += ' (' + file_system.DF_name[log_ch[item_num][0]] + ')'
+                current_dir[-1] += ' [' + file_system.DF_name[log_ch[item_num][0]] + ']'
 
         current_dir.append('Current EF : %s'%log_ch[item_num][1])
         if log_ch[item_num][0] and log_ch[item_num][1]:
             if log_ch[item_num][0] in file_system.DF_name:
                 if log_ch[item_num][1] in file_system.EF_name[log_ch[item_num][0]]:
-                    current_dir[-1] += ' (' + file_system.EF_name[log_ch[item_num][0]][log_ch[item_num][1]] + ')'
+                    current_dir[-1] += ' [' + file_system.EF_name[log_ch[item_num][0]][log_ch[item_num][1]] + ']'
 
         current_dir.append('=' * 150)
         app_rst = current_dir + app_rst

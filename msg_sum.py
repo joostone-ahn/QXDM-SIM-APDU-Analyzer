@@ -52,7 +52,7 @@ def rst(input):
             ins = prot_data[m][0][2:4]
             if ins in command.cmd_name:
                 cmd = command.cmd_name[ins]
-                if sw == '6A82': cmd += '(X)'
+                if sw == '6A82' or sw =='6282' : cmd += '(X)'
                 if ins == 'A4': # SELECT
                     if sw != '':
                         log_ch, file_name, error = SELECT.process(prot_data[m], log_ch, log_ch_id)
