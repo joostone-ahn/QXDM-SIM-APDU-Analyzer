@@ -2,10 +2,6 @@ import file_system
 debug_mode = 0
 
 def process(data, log_ch, log_ch_id):
-    if data[-1][-4:] != '9000' and data[-1][-4:-2] != '91':
-        log_ch_prev_0 = log_ch[log_ch_id][0]
-        log_ch_prev_1 = log_ch[log_ch_id][1]
-
     file_id = data[2]
     if file_id[0:2] == 'A0':
         log_ch[log_ch_id][0] = file_id
@@ -83,14 +79,6 @@ def process(data, log_ch, log_ch_id):
         print('DF_file_id   :', log_ch[log_ch_id][0])
         print('EF_file_id   :', log_ch[log_ch_id][1])
         print('file_name    :', file_name)
-
-    if data[-1][-4:] != '9000' and data[-1][-4:-2] != '91':
-        log_ch[log_ch_id][0] = log_ch_prev_0
-        log_ch[log_ch_id][1] = log_ch_prev_1
-        error = '(SW:' + data[-1][-4:] + ') ' + error
-
-    if debug_mode == 1:
         print('error        :', error)
-        print()
 
     return log_ch, file_name, error

@@ -7,24 +7,24 @@ def process(current_DF, current_EF, file_id):
                     file_name = EF_name[current_DF][current_EF]
                 else:
                     file_name = file_id
-                    error = '(1) Non-standard'
+                    error = '*Non-standard'
             else:
                 file_name = file_id
-                error = '(1) Non-standard'
+                error = '*Non-standard'
         else:
             file_name = file_id #'7FFFXXXX'
-            error = '(2) Last selected AID not decided'
+            error = '*AID not decided'
     else:
         if current_DF:
             if current_DF in DF_name:
                 file_name = DF_name[current_DF]
             else:
                 file_name = file_id
-                error = '(1) Non-standard'
+                error = '*Non-standard'
         else:
             file_name = file_id #'7FFF'
-            error = '(2) Last selected AID not decided'
-    if file_name: file_name = '[' + file_name + ']'
+            error = '*AID not decided'
+    if file_name: file_name = '[%s]'%file_name
     return file_name, error
 
 
@@ -101,13 +101,15 @@ EF_name ={
     },
     '7F105F3A': {
         '4F09': 'PBC',
-        '4F11': 'ANR',
+        '4F11': 'ANRA',
+        '4F13': 'ANRB',
+        '4F15': 'ANRC',
         '4F19': 'SNE',
         '4F21': 'UID',
         '4F22': 'PSC',
         '4F23': 'CC',
         '4F24': 'PUID',
-        '4F25': 'IAP',
+        # '4F25': 'IAP',
         '4F26': 'GRP',
         '4F30': 'PBR',
         '4F3A': 'ADN',
@@ -115,8 +117,19 @@ EF_name ={
         '4F4A': 'EXT1',
         '4F4B': 'AAS',
         '4F4C': 'GAS',
-        '4F50': 'EMAIL'
-    },
+        '4F50': 'EMAIL',
+        '4F54': 'PURI',
+        '4F3B': 'ADN1',
+        '4F0A': 'PBC1',
+        '4F25': 'GRP1',
+        '4F12': 'ANRA1',
+        '4F14': 'ANRB1',
+        '4F16': 'ANRC1',
+        '4F1A': 'SNE1',
+        '4F20': 'UID1',
+        '4F51': 'EMAIL1',
+        '4F55': 'PURI1'
+},
     '7F105F3B': {
         '4F47': 'MML',
         '4F48': 'MMDF'
@@ -242,13 +255,15 @@ EF_name ={
     },
     '7FFF5F3A': {
         '4F09': 'PBC',
-        '4F11': 'ANR',
+        '4F11': 'ANRA',
+        '4F13': 'ANRB',
+        '4F15': 'ANRC',
         '4F19': 'SNE',
         '4F21': 'UID',
         '4F22': 'PSC',
         '4F23': 'CC',
         '4F24': 'PUID',
-        '4F25': 'IAP',
+        # '4F25': 'IAP',
         '4F26': 'GRP',
         '4F30': 'PBR',
         '4F3A': 'ADN',
@@ -256,7 +271,18 @@ EF_name ={
         '4F4A': 'EXT1',
         '4F4B': 'AAS',
         '4F4C': 'GAS',
-        '4F50': 'EMAIL'
+        '4F50': 'EMAIL',
+        '4F54': 'PURI',
+        '4F3B': 'ADN1',
+        '4F0A': 'PBC1',
+        '4F25': 'GRP1',
+        '4F12': 'ANRA1',
+        '4F14': 'ANRB1',
+        '4F16': 'ANRC1',
+        '4F1A': 'SNE1',
+        '4F20': 'UID1',
+        '4F51': 'EMAIL1',
+        '4F55': 'PURI1'
     },
     '7FFF5F3B': {
         '4F20': 'Kc',
