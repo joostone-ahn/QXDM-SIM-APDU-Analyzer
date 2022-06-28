@@ -16,4 +16,4 @@ This tool helps you to overcome the above limits.
 3) select SIM1 or SIM2
 4) click 'Execute' button
 
-![image](https://user-images.githubusercontent.com/98713651/175818704-9c162bd0-dd6d-4e03-877d-01181794c1f4.png)
+![image](https://user-images.githubusercontent.com/98713651/176153566-6ab9547d-6133-4c5c-af9e-39b355bb40a8.png)
