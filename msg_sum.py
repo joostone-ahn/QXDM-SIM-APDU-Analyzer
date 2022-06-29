@@ -6,7 +6,7 @@ debug_mode = 0
 
 def rst(input):
     msg_all, prot_start, prot_type, prot_data = input
-    sum_rst, sum_log_ch, sum_log_ch_id, sum_error = [], [], [], []
+    sum_rst, sum_log_ch, sum_log_ch_id, sum_read, sum_error = [], [], [], [], []
     log_ch = [['','']] # log_ch[n] = [current DF, current EF]
 
     last_file_id = ''
@@ -20,17 +20,15 @@ def rst(input):
 
         if type != 'TX' and type != 'RX': # RESET, ATR
             sum_rst.append(num + '  ' + time + '  ' + type)
-            sum_log_ch.append(['',''])
+            sum_log_ch.append(['','']) # sum_log_ch[n] = [current DF, current EF]
             sum_log_ch_id.append('')
+            sum_read.append(['','']) # sum_read[n] = [file_name, file_data]
             sum_error.append('')
         else: # sum_type == 'TX'
             if len(prot_data[m][-1]) >= 4:
                 sw = prot_data[m][-1][-4:]
             else:  # Incomplete APDU
                 sw = ''
-            if sw != '9000' and sw[:2] != '91':
-                log_ch_prev_0 = log_ch[log_ch_id][0]
-                log_ch_prev_1 = log_ch[log_ch_id][1]
             if debug_mode: print('status word    :', sw)
 
             # sum_log_ch_id
@@ -44,15 +42,19 @@ def rst(input):
                 for n in range(log_ch_id - len(log_ch) + 1):
                     log_ch.append(['',''])
             sum_log_ch_id.append(log_ch_id)
-            if debug_mode: print('class          :', cla)
+            if debug_mode: print('CLA byte       :', cla)
             if debug_mode: print('log_ch_id      :', sum_log_ch_id[-1])
+
+            if sw != '9000' and sw[:2] != '91':
+                log_ch_prev_0 = log_ch[log_ch_id][0]
+                log_ch_prev_1 = log_ch[log_ch_id][1]
 
             # log_ch
             file_name, error = '',''
             ins = prot_data[m][0][2:4]
             if ins in command.cmd_name:
                 cmd = command.cmd_name[ins]
-                if sw == '6A82' or sw =='6282' : cmd += '(X)'
+                if sw == '6A82' or sw =='6282': cmd += '(X)'
                 if ins == 'A4': # SELECT
                     if sw != '':
                         log_ch, file_name, error = SELECT.process(prot_data[m], log_ch, log_ch_id)
@@ -71,7 +73,7 @@ def rst(input):
                     file_name, error = file_system.process(log_ch[log_ch_id][0], '', last_file_id)
             else:
                 cmd = 'Unknown INS(%s)'%ins
-            if debug_mode: print('instruction    :', ins)
+            if debug_mode: print('INS byte       :', ins)
             if debug_mode: print('command name   :', cmd)
             if debug_mode: print('file name      :', file_name)
             if debug_mode: print('log_ch         :', log_ch)
@@ -87,13 +89,33 @@ def rst(input):
             sum_rst.append(num + '  ' + time + '  ' + cmd + ' ' * (cmd_len_max - len(cmd)))
             if file_name: sum_rst[-1] += '  ' + file_name
 
+            # sum_read
+            if sw == '9000' or sw[:2] == '91':
+                if ins == 'B0':
+                    sum_read.append([file_name, prot_data[m][1][2:-4]])
+                elif ins == 'B2':
+                    sum_read.append([file_name, prot_data[m][1][2:-4]])
+                    P1 = prot_data[m][0][4:6].zfill(2)
+                    P2 = format(int(prot_data[m][0][6:8], 16), 'b').zfill(8) # ts102.221 table 11.11 Coding of P2
+                    if P2[-3:] == '100':
+                        sum_read[-1].append(P1)
+                    elif P2[-3:] == '010':
+                        sum_read[-1].append('Next')
+                    elif P2[-3:] == '011':
+                        sum_read[-1].append('Previous')
+                else:
+                    sum_read.append(['',''])
+            else:
+                sum_read.append(['',''])
+
             # sum_error
             sum_error.append(error)
 
         if debug_mode: print('sum_log_ch     :', sum_log_ch[-1])
         if debug_mode: print('sum_rst        :', '['+sum_rst[-1].split('[')[1])
+        if debug_mode: print('sum_read       :', sum_read[-1])
         if debug_mode: print('error          :', sum_error[-1])
         if debug_mode: print()
 
-    return sum_rst, sum_log_ch, sum_log_ch_id, sum_error
+    return sum_rst, sum_log_ch, sum_log_ch_id, sum_read, sum_error
 
