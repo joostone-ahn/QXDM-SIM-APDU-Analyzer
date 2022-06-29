@@ -1,5 +1,6 @@
 import command
 import SELECT
+import READ
 import file_system
 import short_file_id
 debug_mode = 0
@@ -91,22 +92,9 @@ def rst(input):
 
             # sum_read
             if sw == '9000' or sw[:2] == '91':
-                if ins == 'B0':
-                    sum_read.append([file_name, prot_data[m][1][2:-4]])
-                elif ins == 'B2':
-                    sum_read.append([file_name, prot_data[m][1][2:-4]])
-                    P1 = prot_data[m][0][4:6].zfill(2)
-                    P2 = format(int(prot_data[m][0][6:8], 16), 'b').zfill(8) # ts102.221 table 11.11 Coding of P2
-                    if P2[-3:] == '100':
-                        sum_read[-1].append(P1)
-                    elif P2[-3:] == '010':
-                        sum_read[-1].append('Next')
-                    elif P2[-3:] == '011':
-                        sum_read[-1].append('Previous')
-                else:
-                    sum_read.append(['',''])
+                sum_read = READ.process(ins, file_name, prot_data[m], sum_read)
             else:
-                sum_read.append(['',''])
+                sum_read.append(['', ''])
 
             # sum_error
             sum_error.append(error)
