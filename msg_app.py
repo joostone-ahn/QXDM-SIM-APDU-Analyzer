@@ -32,7 +32,8 @@ def rst(input1, input2, read, item_num):
 
         if read[item_num][0]:
             if len(read[item_num]) > 2:
-                app_rst.append('READ RECORD (%s) : '%read[item_num][2] + read[item_num][1])
+                app_rst.append('Record Number   : %s'%read[item_num][2])
+                app_rst.append('Record Contents : %s'%read[item_num][1])
             else:
                 app_rst.append('READ BINARY : ' + read[item_num][1])
         if debug_mode: print(app_rst[-1])
