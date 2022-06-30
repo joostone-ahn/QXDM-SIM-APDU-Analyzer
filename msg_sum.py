@@ -8,7 +8,7 @@ debug_mode = 0
 def rst(input):
     msg_all, prot_start, prot_type, prot_data = input
     sum_rst, sum_log_ch, sum_log_ch_id, sum_read, sum_error = [], [], [], [], []
-    sum_remote = READ.sum_remote
+    sum_remote, sum_remote_list = READ.init()
     log_ch = [['','']] # log_ch[n] = [current DF, current EF]
 
     last_file_id = ''
@@ -93,7 +93,8 @@ def rst(input):
             # sum_read, sum_remote
             if ins == 'B0' or ins == 'B2':
                 if sw == '9000' or sw[:2] == '91':
-                    sum_read, sum_remote = READ.process(ins, file_name, prot_data[m], sum_read, sum_remote)
+                    sum_read, sum_remote \
+                        = READ.process(ins, file_name, prot_data[m], sum_read, sum_remote, sum_remote_list)
                 else:
                     sum_read.append(['', ''])
             else:

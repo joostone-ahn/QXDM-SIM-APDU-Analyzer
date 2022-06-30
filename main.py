@@ -159,7 +159,8 @@ class Basic_GUI(QWidget):
         self.opened_label.setText(opened_file)
         self.exe_btn.setEnabled(True)
 
-        self.msg_start, self.msg_end, self.msg_SN, self.msg_port, self.msg_type, self.msg_data = msg_item.process(self.msg_all)
+        self.msg_start, self.msg_end, self.msg_SN, self.msg_port, self.msg_type, self.msg_data \
+            = msg_item.process(self.msg_all)
 
         if debug_mode :
             print('[File Name]', opened_file)
@@ -206,7 +207,8 @@ class Basic_GUI(QWidget):
             print()
 
         sum_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data
-        self.sum_rst, self.sum_log_ch, self.sum_log_ch_id, self.sum_read, self.sum_error, self.sum_remote = msg_sum.rst(sum_input)
+        self.sum_rst, self.sum_log_ch, self.sum_log_ch_id, self.sum_read, self.sum_error, self.sum_remote \
+            = msg_sum.rst(sum_input)
         for n in self.sum_rst:
             self.SUM_list.addItem(n)
 
