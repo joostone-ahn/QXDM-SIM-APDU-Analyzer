@@ -100,16 +100,16 @@ class Basic_GUI(QWidget):
         hbox3.addLayout(App_vbox)
         # hbox3.addStretch()
 
-        self.SUM_File_label = QLabel()
-        self.SUM_File_label.setText("Remote File Changed (OTA Activation)")
-        self.SUM_File_label.setFont(CourierNewFont)
-        self.SUM_File_list = QListWidget()
-        self.SUM_File_list.setAutoScroll(True)
-        self.SUM_File_list.setFixedWidth(530)
-        self.SUM_File_list.setFont(CourierNewFont)
+        self.Remote_label = QLabel()
+        self.Remote_label.setText("Remote File Changed (OTA Activation)")
+        self.Remote_label.setFont(CourierNewFont)
+        self.Remote_list = QListWidget()
+        self.Remote_list.setAutoScroll(True)
+        self.Remote_list.setFixedWidth(530)
+        self.Remote_list.setFont(CourierNewFont)
         SUM_File_vbox = QVBoxLayout()
-        SUM_File_vbox.addWidget(self.SUM_File_label)
-        SUM_File_vbox.addWidget(self.SUM_File_list)
+        SUM_File_vbox.addWidget(self.Remote_label)
+        SUM_File_vbox.addWidget(self.Remote_list)
 
         self.Prot_label = QLabel()
         self.Prot_label.setText("Protocol-Level Analysis")
@@ -145,6 +145,8 @@ class Basic_GUI(QWidget):
         self.SUM_list.clear()
         self.App_list.clear()
         self.Prot_list.clear()
+        self.Remote_list.clear()
+
         fname = QFileDialog.getOpenFileName(self,'Load file','',"Text files(*.txt)")
         opened_file = fname[0]
         if fname[0]:
@@ -177,6 +179,8 @@ class Basic_GUI(QWidget):
         self.SUM_list.clear()
         self.App_list.clear()
         self.Prot_list.clear()
+        self.Remote_list.clear()
+
         port_num = self.comb_box.currentIndex()+1
 
         port_index =[]
@@ -211,6 +215,12 @@ class Basic_GUI(QWidget):
             = msg_sum.rst(sum_input)
         for n in self.sum_rst:
             self.SUM_list.addItem(n)
+        for n in self.sum_remote:
+            if len(n)>1:
+                self.Remote_list.addItem(n[0])
+                self.Remote_list.addItem(' ' +n[1])
+                if len(n)>2:
+                    self.Remote_list.addItem('>' + n[2])
 
         if debug_mode :
             print('[ SUMMARY FILTER ]')
