@@ -13,7 +13,7 @@ def process(current_DF, current_EF, file_id):
                 error = '*Non-standard'
         else:
             file_name = file_id #'7FFFXXXX'
-            error = '*AID not decided'
+            error = 'AID not decided'
     else:
         if current_DF:
             if current_DF in DF_name:
@@ -23,7 +23,7 @@ def process(current_DF, current_EF, file_id):
                 error = '*Non-standard'
         else:
             file_name = file_id #'7FFF'
-            error = '*AID not decided'
+            error = 'AID not decided'
     if file_name: file_name = '[%s]'%file_name
     return file_name, error
 
@@ -355,7 +355,7 @@ EF_name ={
         '4F07': 'SUCI_Calc_Info',
         '4F08': 'OPL5G',
         '4F09': 'NSI',
-        '4F0A': 'Routing Indicator',
+        '4F0A': 'Routing_Indicator',
         '4F0B': 'URSP',
         '4F0C': 'TN3GPPSNN'
     },

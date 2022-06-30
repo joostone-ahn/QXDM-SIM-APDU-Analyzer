@@ -24,7 +24,6 @@ def process(data, log_ch, log_ch_id):
                     else:
                         log_ch[log_ch_id][0] = '' # Last selected AID not decided
             else:
-                log_ch[log_ch_id][0] = file_id
                 log_ch[log_ch_id][1] = file_id
         else: # len(file_id) > 4
             if file_id[0:4] == '7F10':

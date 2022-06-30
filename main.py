@@ -101,7 +101,7 @@ class Basic_GUI(QWidget):
         # hbox3.addStretch()
 
         self.SUM_File_label = QLabel()
-        self.SUM_File_label.setText("EF_FILE SUMMARY (TBD)")
+        self.SUM_File_label.setText("Remote File Changed (OTA Activation)")
         self.SUM_File_label.setFont(CourierNewFont)
         self.SUM_File_list = QListWidget()
         self.SUM_File_list.setAutoScroll(True)
@@ -206,7 +206,7 @@ class Basic_GUI(QWidget):
             print()
 
         sum_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data
-        self.sum_rst, self.sum_log_ch, self.sum_log_ch_id, self.sum_read, self.sum_error = msg_sum.rst(sum_input)
+        self.sum_rst, self.sum_log_ch, self.sum_log_ch_id, self.sum_read, self.sum_error, self.sum_remote = msg_sum.rst(sum_input)
         for n in self.sum_rst:
             self.SUM_list.addItem(n)
 
@@ -217,6 +217,7 @@ class Basic_GUI(QWidget):
             print('sum_log_ch_id :', len(self.sum_log_ch_id), self.sum_log_ch_id)
             print('sum_read      :', len(self.sum_read), self.sum_read)
             print('sum_error     :', len(self.sum_error), self.sum_error)
+            print('sum_remote    :', len(self.sum_remote), self.sum_remote)
             print()
 
         self.save_btn.setEnabled(True)
@@ -237,7 +238,7 @@ class Basic_GUI(QWidget):
 
         app_rst_input1 = self.msg_all, self.prot_start, self.prot_end
         app_rst_input2 = self.prot_type, self.sum_log_ch, self.sum_log_ch_id
-        app_rst = msg_app.rst(app_rst_input1, app_rst_input2, self.sum_read, item_num)
+        app_rst = msg_app.rst(app_rst_input1, app_rst_input2, self.sum_read, self.sum_error, item_num)
         app_rst_show = ''
         for n in app_rst:
             app_rst_show +=n +'\n'

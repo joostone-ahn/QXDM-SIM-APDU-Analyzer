@@ -1,16 +1,42 @@
-def process(ins, file_name, data, sum_read):
+def process(ins, file_name, data, sum_read, sum_remote):
+
     if ins == 'B0':
-        sum_read.append([file_name, data[1][2:-4]])
+        sum_read.append([data[1][2:-4]])
+        P2 = data[0][6:8].zfill(2)
+        Le = data[0][8:10].zfill(2)
+        sum_read[-1].append([P2,Le]) # sum_read[n][2] = [offset low, Number of bytes to be read]
     elif ins == 'B2':
-        sum_read.append([file_name, data[1][2:-4]])
+        sum_read.append([data[1][2:-4]]) # sum_read[n][0] = file_name, sum_read[n][1] = file_data
         P1 = data[0][4:6].zfill(2)
         P2 = format(int(data[0][6:8], 16), 'b').zfill(8)  # ts102.221 table 11.11 Coding of P2
         if P2[-3:] == '100':
-            sum_read[-1].append(P1)
+            sum_read[-1].append(P1) # sum_read[n][2] = record_num
         elif P2[-3:] == '010':
             sum_read[-1].append('Next')
         elif P2[-3:] == '011':
             sum_read[-1].append('Previous')
-    else:
-        sum_read.append(['', ''])
-    return sum_read
+        Le = data[0][8:10].zfill(2)
+        sum_read[-1].append(Le) # sum_read[n][3] = record length
+
+    file_name = file_name.replace('[','').replace(']','')
+    if file_name in sum_remote_list:
+        ind = sum_remote_list.index(file_name)
+        if data[1][2:-4] != sum_remote[ind][-1]:
+            sum_remote[ind].append(data[1][2:-4])
+            # print(sum_remote[ind])
+
+    return sum_read, sum_remote
+
+sum_remote = []
+sum_remote.append(['MSISDN'])
+sum_remote.append(['IMSI'])
+sum_remote.append(['ACC'])
+sum_remote.append(['IMPI'])
+sum_remote.append(['IMPU'])
+sum_remote.append(['HPLMNwAcT'])
+sum_remote.append(['SUCI_Calc_Info'])
+sum_remote.append(['Routing_Indicator'])
+
+sum_remote_list = []
+for n in sum_remote:
+    sum_remote_list.append(n[0])
