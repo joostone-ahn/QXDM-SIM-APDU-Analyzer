@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import pyqtSignal, pyqtSlot
+from PyQt5.QtCore import pyqtSlot
 from PyQt5 import QtGui
 import msg_item
 import port
@@ -75,7 +75,7 @@ class Basic_GUI(QWidget):
         self.SUM_label.setFont(CourierNewFont)
         self.SUM_list = QListWidget()
         self.SUM_list.setAutoScroll(True)
-        self.SUM_list.setFixedHeight(500)
+        self.SUM_list.setFixedHeight(400)
         self.SUM_list.setFixedWidth(530)
         self.SUM_list.setFont(CourierNewFont)
         SUM_vbox = QVBoxLayout()
@@ -89,7 +89,7 @@ class Basic_GUI(QWidget):
         self.App_label.setText("Application-Level Analysis")
         self.App_label.setFont(CourierNewFont)
         self.App_list = QTextBrowser()
-        self.App_list.setFixedHeight(500)
+        self.App_list.setFixedHeight(400)
         self.App_list.setFont(CourierNewFont)
         App_vbox = QVBoxLayout()
         App_vbox.addWidget(self.App_label)
@@ -216,11 +216,16 @@ class Basic_GUI(QWidget):
         for n in self.sum_rst:
             self.SUM_list.addItem(n)
         for n in self.sum_remote:
-            if len(n)>1:
-                self.Remote_list.addItem(n[0])
-                self.Remote_list.addItem(' ' +n[1])
-                if len(n)>2:
-                    self.Remote_list.addItem('>' + n[2])
+            if len(n)==2:
+                if 'ICCID' in n[0]:
+                    self.Remote_list.addItem('-' * 70)
+                    self.Remote_list.addItem('%12s'%n[0] + '   ' + n[1].replace('   ',' '))
+            if len(n)>2:
+                self.Remote_list.addItem('-' * 70)
+                self.Remote_list.addItem('%12s'%n[0] + '   ' + n[1].replace('   ',' '))
+                self.Remote_list.addItem(' '*12 + '   ' + n[2].replace('   ',' '))
+        if self.Remote_list:
+            self.Remote_list.addItem('-' * 70)
 
         if debug_mode :
             print('[ SUMMARY FILTER ]')
