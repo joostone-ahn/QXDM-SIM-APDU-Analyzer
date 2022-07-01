@@ -1,12 +1,14 @@
 import command
 import SELECT
+import READ
 import file_system
 import short_file_id
 debug_mode = 0
 
 def rst(input):
     msg_all, prot_start, prot_type, prot_data = input
-    sum_rst, sum_log_ch, sum_log_ch_id, sum_error = [], [], [], []
+    sum_rst, sum_log_ch, sum_log_ch_id, sum_read, sum_error = [], [], [], [], []
+    sum_remote, sum_remote_list = READ.init()
     log_ch = [['','']] # log_ch[n] = [current DF, current EF]
 
     last_file_id = ''
@@ -20,17 +22,15 @@ def rst(input):
 
         if type != 'TX' and type != 'RX': # RESET, ATR
             sum_rst.append(num + '  ' + time + '  ' + type)
-            sum_log_ch.append(['',''])
+            sum_log_ch.append(['','']) # sum_log_ch[n] = [current DF, current EF]
             sum_log_ch_id.append('')
+            sum_read.append(['','']) # sum_read[n] = [file_name, file_data]
             sum_error.append('')
         else: # sum_type == 'TX'
             if len(prot_data[m][-1]) >= 4:
                 sw = prot_data[m][-1][-4:]
             else:  # Incomplete APDU
                 sw = ''
-            if sw != '9000' and sw[:2] != '91':
-                log_ch_prev_0 = log_ch[log_ch_id][0]
-                log_ch_prev_1 = log_ch[log_ch_id][1]
             if debug_mode: print('status word    :', sw)
 
             # sum_log_ch_id
@@ -44,22 +44,27 @@ def rst(input):
                 for n in range(log_ch_id - len(log_ch) + 1):
                     log_ch.append(['',''])
             sum_log_ch_id.append(log_ch_id)
-            if debug_mode: print('class          :', cla)
+            if debug_mode: print('CLA byte       :', cla)
             if debug_mode: print('log_ch_id      :', sum_log_ch_id[-1])
+
+            if sum_rst:
+                if 'SELECT(X)' in sum_rst[-1]:
+                    log_ch[log_ch_id][1] = ''
+                    # if prot_data[m][0][2:4] != 'A4':
+                    #     print(sum_rst[-1])
 
             # log_ch
             file_name, error = '',''
             ins = prot_data[m][0][2:4]
             if ins in command.cmd_name:
                 cmd = command.cmd_name[ins]
-                if sw == '6A82' or sw =='6282' : cmd += '(X)'
                 if ins == 'A4': # SELECT
                     if sw != '':
                         log_ch, file_name, error = SELECT.process(prot_data[m], log_ch, log_ch_id)
                         last_file_id = prot_data[m][2]
                     else:
                         file_name = '[N/A]'
-                        error = '*Incomplete APDU'
+                        error = 'Incomplete APDU'
                 elif ins in short_file_id.cmd_SFI_list:
                     SFI_used, SFI = short_file_id.category(prot_data[m][0])
                     if SFI_used:
@@ -71,29 +76,44 @@ def rst(input):
                     file_name, error = file_system.process(log_ch[log_ch_id][0], '', last_file_id)
             else:
                 cmd = 'Unknown INS(%s)'%ins
-            if debug_mode: print('instruction    :', ins)
+            if debug_mode: print('INS byte       :', ins)
             if debug_mode: print('command name   :', cmd)
             if debug_mode: print('file name      :', file_name)
             if debug_mode: print('log_ch         :', log_ch)
 
             # sum_log_ch
-            if sw != '9000' and sw[:2] != '91':
-                log_ch[log_ch_id][0] = log_ch_prev_0
-                log_ch[log_ch_id][1] = log_ch_prev_1
             sum_log_ch.append(log_ch[log_ch_id][0:2])
 
             # sum_rst
+            if sw != '9000' and sw[:2] != '91' and ins[0] != '2': cmd += '(X)'
             cmd_len_max = len(command.cmd_name['AA'])+8  # TERMINAL CAPABILITY
             sum_rst.append(num + '  ' + time + '  ' + cmd + ' ' * (cmd_len_max - len(cmd)))
             if file_name: sum_rst[-1] += '  ' + file_name
 
-            # sum_error
+            # sum_read, sum_remote
+            if ins == 'B0' or ins == 'B2':
+                if sw == '9000' or sw[:2] == '91':
+                    sum_read, sum_remote \
+                        = READ.process(ins, file_name, prot_data[m], sum_read, sum_remote, sum_remote_list)
+                else:
+                    sum_read.append(['', ''])
+            else:
+                sum_read.append(['', ''])
+
+            # sum_error (R-APDU TBD)
+            if sw == '6A82': # ETSI ts102.221 Table 10.14
+                if error: error = 'File not found (SW:6A82) ' + error
+                else: error = 'File not found (SW:6A82)'
+            elif sw == '6282': # ETSI ts102.221 Table 10.9
+                if error: error = 'unsuccessful search (SW:6282)' + error
+                else: error = 'unsuccessful search (SW:6282)'
             sum_error.append(error)
 
         if debug_mode: print('sum_log_ch     :', sum_log_ch[-1])
         if debug_mode: print('sum_rst        :', '['+sum_rst[-1].split('[')[1])
+        if debug_mode: print('sum_read       :', sum_read[-1])
         if debug_mode: print('error          :', sum_error[-1])
         if debug_mode: print()
 
-    return sum_rst, sum_log_ch, sum_log_ch_id, sum_error
+    return sum_rst, sum_log_ch, sum_log_ch_id, sum_read, sum_error, sum_remote
 

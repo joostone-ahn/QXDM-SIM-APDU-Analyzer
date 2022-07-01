@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import pyqtSignal, pyqtSlot
+from PyQt5.QtCore import pyqtSlot
 from PyQt5 import QtGui
 import msg_item
 import port
@@ -75,7 +75,7 @@ class Basic_GUI(QWidget):
         self.SUM_label.setFont(CourierNewFont)
         self.SUM_list = QListWidget()
         self.SUM_list.setAutoScroll(True)
-        self.SUM_list.setFixedHeight(500)
+        self.SUM_list.setFixedHeight(400)
         self.SUM_list.setFixedWidth(530)
         self.SUM_list.setFont(CourierNewFont)
         SUM_vbox = QVBoxLayout()
@@ -89,7 +89,7 @@ class Basic_GUI(QWidget):
         self.App_label.setText("Application-Level Analysis")
         self.App_label.setFont(CourierNewFont)
         self.App_list = QTextBrowser()
-        self.App_list.setFixedHeight(500)
+        self.App_list.setFixedHeight(400)
         self.App_list.setFont(CourierNewFont)
         App_vbox = QVBoxLayout()
         App_vbox.addWidget(self.App_label)
@@ -100,16 +100,16 @@ class Basic_GUI(QWidget):
         hbox3.addLayout(App_vbox)
         # hbox3.addStretch()
 
-        self.SUM_File_label = QLabel()
-        self.SUM_File_label.setText("EF_FILE SUMMARY (TBD)")
-        self.SUM_File_label.setFont(CourierNewFont)
-        self.SUM_File_list = QListWidget()
-        self.SUM_File_list.setAutoScroll(True)
-        self.SUM_File_list.setFixedWidth(530)
-        self.SUM_File_list.setFont(CourierNewFont)
+        self.Remote_label = QLabel()
+        self.Remote_label.setText("Remote File Changed (OTA Activation)")
+        self.Remote_label.setFont(CourierNewFont)
+        self.Remote_list = QListWidget()
+        self.Remote_list.setAutoScroll(True)
+        self.Remote_list.setFixedWidth(530)
+        self.Remote_list.setFont(CourierNewFont)
         SUM_File_vbox = QVBoxLayout()
-        SUM_File_vbox.addWidget(self.SUM_File_label)
-        SUM_File_vbox.addWidget(self.SUM_File_list)
+        SUM_File_vbox.addWidget(self.Remote_label)
+        SUM_File_vbox.addWidget(self.Remote_list)
 
         self.Prot_label = QLabel()
         self.Prot_label.setText("Protocol-Level Analysis")
@@ -145,6 +145,8 @@ class Basic_GUI(QWidget):
         self.SUM_list.clear()
         self.App_list.clear()
         self.Prot_list.clear()
+        self.Remote_list.clear()
+
         fname = QFileDialog.getOpenFileName(self,'Load file','',"Text files(*.txt)")
         opened_file = fname[0]
         if fname[0]:
@@ -159,7 +161,8 @@ class Basic_GUI(QWidget):
         self.opened_label.setText(opened_file)
         self.exe_btn.setEnabled(True)
 
-        self.msg_start, self.msg_end, self.msg_SN, self.msg_port, self.msg_type, self.msg_data = msg_item.process(self.msg_all)
+        self.msg_start, self.msg_end, self.msg_SN, self.msg_port, self.msg_type, self.msg_data \
+            = msg_item.process(self.msg_all)
 
         if debug_mode :
             print('[File Name]', opened_file)
@@ -176,6 +179,8 @@ class Basic_GUI(QWidget):
         self.SUM_list.clear()
         self.App_list.clear()
         self.Prot_list.clear()
+        self.Remote_list.clear()
+
         port_num = self.comb_box.currentIndex()+1
 
         port_index =[]
@@ -206,16 +211,30 @@ class Basic_GUI(QWidget):
             print()
 
         sum_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data
-        self.sum_rst, self.sum_log_ch, self.sum_log_ch_id, self.sum_error = msg_sum.rst(sum_input)
+        self.sum_rst, self.sum_log_ch, self.sum_log_ch_id, self.sum_read, self.sum_error, self.sum_remote \
+            = msg_sum.rst(sum_input)
         for n in self.sum_rst:
             self.SUM_list.addItem(n)
+        for n in self.sum_remote:
+            if len(n)==2:
+                if 'ICCID' in n[0]:
+                    self.Remote_list.addItem('-' * 70)
+                    self.Remote_list.addItem('%12s'%n[0] + '   ' + n[1].replace('   ',' '))
+            if len(n)>2:
+                self.Remote_list.addItem('-' * 70)
+                self.Remote_list.addItem('%12s'%n[0] + '   ' + n[1].replace('   ',' '))
+                self.Remote_list.addItem(' '*12 + '   ' + n[2].replace('   ',' '))
+        if self.Remote_list:
+            self.Remote_list.addItem('-' * 70)
 
         if debug_mode :
             print('[ SUMMARY FILTER ]')
             print('sum_rst       :', len(self.sum_rst), self.sum_rst)
             print('sum_log_ch    :', len(self.sum_log_ch), self.sum_log_ch)
             print('sum_log_ch_id :', len(self.sum_log_ch_id), self.sum_log_ch_id)
+            print('sum_read      :', len(self.sum_read), self.sum_read)
             print('sum_error     :', len(self.sum_error), self.sum_error)
+            print('sum_remote    :', len(self.sum_remote), self.sum_remote)
             print()
 
         self.save_btn.setEnabled(True)
@@ -236,7 +255,7 @@ class Basic_GUI(QWidget):
 
         app_rst_input1 = self.msg_all, self.prot_start, self.prot_end
         app_rst_input2 = self.prot_type, self.sum_log_ch, self.sum_log_ch_id
-        app_rst = msg_app.rst(app_rst_input1, app_rst_input2, item_num)
+        app_rst = msg_app.rst(app_rst_input1, app_rst_input2, self.sum_read, self.sum_error, item_num)
         app_rst_show = ''
         for n in app_rst:
             app_rst_show +=n +'\n'
