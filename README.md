@@ -11,9 +11,12 @@ This tool helps you to overcome the above limits.
 
 [Guide]
 1) run main.py
-2) click 'Open' button and load a text file(.txt) in 'file_sample' directory
-  ※ filtered with 'UIM APDU [0x19B7]' from QXDM or QCAT logs
+2-1) click 'Open file' button and open a text file(.txt) in 'file_sample' directory
+  ※ filtered with 'UIM APDU [0x19B7]' from QCAT logs
+2-2) click 'Clipboard' button
+  ※ filtered with 'UIM APDU [0x19B7]' from QXDM logs
 3) select SIM1 or SIM2
 4) click 'Execute' button
 
-![image](https://user-images.githubusercontent.com/98713651/176852087-5609e529-266c-43a7-a2ff-75ae41fba760.png)
+![image](https://user-images.githubusercontent.com/98713651/176990012-dac4241d-de7c-4a6b-a39d-68347c63b2c0.png)
+
