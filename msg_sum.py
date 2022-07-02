@@ -73,8 +73,8 @@ def rst(input, load_type):
                     if SFI_used:
                         cmd += ' (SFI:0x%s)' % SFI
                         log_ch, file_name, error = short_file_id.process(log_ch, log_ch_id, SFI)
-                    else:
-                        file_name, error = file_system.process(log_ch[log_ch_id][0], log_ch[log_ch_id][1], last_file_id)
+                    # else:
+                    #     file_name, error = file_system.process(log_ch[log_ch_id][0], log_ch[log_ch_id][1], last_file_id)
                 elif ins == '88' or ins == '89': # AUTHENTICATE
                     file_name, error = file_system.process(log_ch[log_ch_id][0], '', last_file_id)
             else:
