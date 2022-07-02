@@ -201,6 +201,7 @@ class Basic_GUI(QWidget):
             self.open_btn.setDisabled(True)
             self.clipboard_btn.setDisabled(True)
             self.exe_btn.setEnabled(True)
+            self.exe_label.clear()
             self.comb_box.setEnabled(True)
             self.load_type = 'File'
         else:
@@ -208,6 +209,7 @@ class Basic_GUI(QWidget):
             self.open_btn.setEnabled(True)
             self.clipboard_btn.setEnabled(True)
             self.exe_btn.setDisabled(True)
+            self.exe_label.clear()
             self.comb_box.setDisabled(True)
 
     @pyqtSlot()
@@ -238,6 +240,7 @@ class Basic_GUI(QWidget):
             self.open_btn.setDisabled(True)
             self.clipboard_btn.setDisabled(True)
             self.exe_btn.setEnabled(True)
+            self.exe_label.clear()
             self.comb_box.setEnabled(True)
             self.load_type = 'Paste'
         else:
@@ -245,6 +248,7 @@ class Basic_GUI(QWidget):
             self.open_btn.setEnabled(True)
             self.clipboard_btn.setEnabled(True)
             self.exe_btn.setDisabled(True)
+            self.exe_label.clear()
             self.comb_box.setDisabled(True)
 
     @pyqtSlot()
