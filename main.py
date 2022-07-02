@@ -89,7 +89,7 @@ class Basic_GUI(QWidget):
         self.SUM_list = QListWidget()
         self.SUM_list.setAutoScroll(True)
         self.SUM_list.setFixedHeight(500)
-        self.SUM_list.setFixedWidth(550)
+        self.SUM_list.setFixedWidth(630)
         self.SUM_list.setFont(CourierNewFont)
         SUM_vbox = QVBoxLayout()
         SUM_vbox.addWidget(self.SUM_label)
@@ -118,7 +118,7 @@ class Basic_GUI(QWidget):
         self.Remote_label.setFont(CourierNewFont)
         self.Remote_list = QListWidget()
         self.Remote_list.setAutoScroll(True)
-        self.Remote_list.setFixedWidth(550)
+        self.Remote_list.setFixedWidth(630)
         self.Remote_list.setFont(CourierNewFont)
         SUM_File_vbox = QVBoxLayout()
         SUM_File_vbox.addWidget(self.Remote_label)
@@ -298,16 +298,19 @@ class Basic_GUI(QWidget):
         for n in self.sum_rst:
             self.SUM_list.addItem(n)
         for n in self.sum_remote:
+            if '[' in n[0]:
+                if 'MSISDN' in n[0]: n[0] = n[0].split(' ')[0]
+                else: n[0] = n[0].split(' ')[1] + ' ' + n[0].split(' ')[0]
             if len(n)==2:
-                if n[0] in ['ICCID', 'IMSI', 'MSISDN [01]', 'IMPI'] :
-                    self.Remote_list.addItem('-' * 73)
-                    self.Remote_list.addItem('%12s'%n[0] + '   ' + n[1].replace('   ',' '))
+                if n[0] in ['ICCID', 'IMSI', 'MSISDN', 'IMPI'] :
+                    self.Remote_list.addItem('-' * 85)
+                    self.Remote_list.addItem('%10s'%n[0] + '   ' + n[1].replace('   ',' '))
             if len(n)>2:
-                self.Remote_list.addItem('-' * 73)
-                self.Remote_list.addItem('%12s'%n[0] + '   ' + n[1].replace('   ',' '))
-                self.Remote_list.addItem('%12s'%">>>" + '   ' + n[2].replace('   ',' '))
+                self.Remote_list.addItem('-' * 85)
+                self.Remote_list.addItem('%10s'%n[0] + '   ' + n[1].replace('   ',' '))
+                self.Remote_list.addItem('%10s'%">>>" + '   ' + n[2].replace('   ',' '))
         if self.Remote_list:
-            self.Remote_list.addItem('-' * 73)
+            self.Remote_list.addItem('-' * 85)
 
         if debug_mode :
             print('[ SUMMARY FILTER ]')
