@@ -3,7 +3,6 @@ import SELECT
 import READ
 import file_system
 import short_file_id
-from datetime import datetime
 debug_mode = 0
 
 def rst(input, load_type):
@@ -114,7 +113,7 @@ def rst(input, load_type):
             sum_error.append(error)
 
         if debug_mode: print('sum_log_ch     :', sum_log_ch[-1])
-        if debug_mode: print('sum_rst        :', '['+sum_rst[-1].split('[')[1])
+        if debug_mode: print('sum_rst        :', sum_rst[-1])
         if debug_mode: print('sum_read       :', sum_read[-1])
         if debug_mode: print('error          :', sum_error[-1])
         if debug_mode: print()

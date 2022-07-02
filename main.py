@@ -7,6 +7,7 @@ import port
 import msg_sum
 import msg_app
 import msg_prot
+import clipboard
 
 BoldFont = QtGui.QFont()
 BoldFont.setBold(True)
@@ -14,7 +15,7 @@ BoldFont.setBold(True)
 CourierNewFont = QtGui.QFont()
 CourierNewFont.setFamily("Courier New")
 
-debug_mode = 1
+debug_mode = 0
 
 class Basic_GUI(QWidget):
 
@@ -25,53 +26,52 @@ class Basic_GUI(QWidget):
 
     def initUI(self):
 
-        self.open_btn = QPushButton("Open")
+        self.open_btn = QPushButton("Open file")
         self.open_btn.setFont(CourierNewFont)
-        self.open_btn.setFixedWidth(100)
+        self.open_btn.setFixedWidth(120)
         self.open_btn.setCheckable(False)
 
-        self.open_btn.clicked.connect(self.load_msg)
+        self.open_btn.clicked.connect(self.open_file)
+
+        self.clipboard_btn = QPushButton("Clipboard")
+        self.clipboard_btn.setFont(CourierNewFont)
+        self.clipboard_btn.setFixedWidth(120)
+        self.clipboard_btn.setCheckable(False)
+
+        self.clipboard_btn.clicked.connect(self.load_clipboard)
 
         self.opened_label = QLabel()
 
         hbox1 = QHBoxLayout()
         hbox1.addWidget(self.open_btn)
+        hbox1.addWidget(self.clipboard_btn)
         hbox1.addWidget(self.opened_label)
-        # hbox1.addStretch()
-
-        self.paste_btn = QPushButton("Paste")
-        self.paste_btn.setFont(CourierNewFont)
-        self.paste_btn.setFixedWidth(100)
-        self.paste_btn.setCheckable(False)
-        self.paste_btn.setDisabled(True)
-
-        self.paste_btn.clicked.connect(self.load_msg_2)
-
-        self.paste_te = QPlainTextEdit()
-        self.paste_te.setFixedHeight(50)
-        self.paste_te.setFont(CourierNewFont)
-        self.paste_te.textChanged.connect(self.text_paste)
-
-        hbox2 = QHBoxLayout()
-        hbox2.addWidget(self.paste_btn)
-        hbox2.addWidget(self.paste_te)
-
+        hbox1.addStretch()
 
         self.comb_box = QComboBox()
         self.comb_box.addItem("SIM1")
         self.comb_box.addItem("SIM2")
-        self.comb_box.setFixedWidth(100)
+        self.comb_box.setFixedWidth(120)
         self.comb_box.setFont(CourierNewFont)
+        self.comb_box.setDisabled(True)
 
         self.comb_box.currentIndexChanged.connect(self.comb_changed)
 
         self.exe_btn = QPushButton("Execute")
-        self.exe_btn.setFixedWidth(100)
+        self.exe_btn.setFixedWidth(120)
         self.exe_btn.setCheckable(False)
         self.exe_btn.setFont(CourierNewFont)
         self.exe_btn.setDisabled(True)
 
         self.exe_btn.clicked.connect(self.exe_msg)
+
+        self.exe_label = QLabel()
+
+        hbox2 = QHBoxLayout()
+        hbox2.addWidget(self.comb_box)
+        hbox2.addWidget(self.exe_btn)
+        hbox2.addWidget(self.exe_label)
+        hbox2.addStretch()
 
         # self.save_btn = QPushButton("Save")
         # self.save_btn.setFixedWidth(100)
@@ -83,19 +83,12 @@ class Basic_GUI(QWidget):
         #
         # self.saved_label = QLabel()
 
-        hbox3 = QHBoxLayout()
-        hbox3.addWidget(self.comb_box)
-        hbox3.addWidget(self.exe_btn)
-        # hbox3.addWidget(self.save_btn)
-        # hbox3.addWidget(self.saved_label)
-        hbox3.addStretch()
-
         self.SUM_label = QLabel()
         self.SUM_label.setText("Summary")
         self.SUM_label.setFont(CourierNewFont)
         self.SUM_list = QListWidget()
         self.SUM_list.setAutoScroll(True)
-        self.SUM_list.setFixedHeight(400)
+        self.SUM_list.setFixedHeight(500)
         self.SUM_list.setFixedWidth(530)
         self.SUM_list.setFont(CourierNewFont)
         SUM_vbox = QVBoxLayout()
@@ -109,15 +102,15 @@ class Basic_GUI(QWidget):
         self.App_label.setText("Application-Level Analysis")
         self.App_label.setFont(CourierNewFont)
         self.App_list = QTextBrowser()
-        self.App_list.setFixedHeight(400)
+        self.App_list.setFixedHeight(500)
         self.App_list.setFont(CourierNewFont)
         App_vbox = QVBoxLayout()
         App_vbox.addWidget(self.App_label)
         App_vbox.addWidget(self.App_list)
 
-        hbox4 = QHBoxLayout()
-        hbox4.addLayout(SUM_vbox)
-        hbox4.addLayout(App_vbox)
+        hbox3 = QHBoxLayout()
+        hbox3.addLayout(SUM_vbox)
+        hbox3.addLayout(App_vbox)
         # hbox3.addStretch()
 
         self.Remote_label = QLabel()
@@ -140,41 +133,24 @@ class Basic_GUI(QWidget):
         Prot_vbox.addWidget(self.Prot_label)
         Prot_vbox.addWidget(self.Prot_list)
 
-        hbox5 = QHBoxLayout()
-        hbox5.addLayout(SUM_File_vbox)
-        hbox5.addLayout(Prot_vbox)
+        hbox4 = QHBoxLayout()
+        hbox4.addLayout(SUM_File_vbox)
+        hbox4.addLayout(Prot_vbox)
         # hbox4.addStretch()
 
         vbox = QVBoxLayout()
         vbox.addLayout(hbox1)
         vbox.addLayout(hbox2)
+        vbox.addWidget(QLabel())
         vbox.addLayout(hbox3)
         vbox.addWidget(QLabel())
         vbox.addLayout(hbox4)
         vbox.addWidget(QLabel())
-        vbox.addLayout(hbox5)
-        vbox.addWidget(QLabel())
         vbox.addWidget(QLabel("Copyright 2022. JUSEOK AHN<ajs3013@lguplus.co.kr> all rights reserved."))
-        # vbox.addStretch()
 
         self.setLayout(vbox)
         self.setWindowTitle('Dual SIM APDU Analyzer v1.0')
         self.showMaximized()
-
-    @pyqtSlot()
-    def text_paste(self):
-        self.SUM_list.clear()
-        self.App_list.clear()
-        self.Prot_list.clear()
-        self.Remote_list.clear()
-        self.paste_btn.setEnabled(True)
-        self.open_btn.setDisabled(True)
-        self.exe_btn.setDisabled(True)
-        self.opened_label.setText('')
-
-        if self.paste_te.toPlainText() == '':
-            self.open_btn.setEnabled(True)
-            self.paste_btn.setDisabled(True)
 
     @pyqtSlot()
     def comb_changed(self):
@@ -184,15 +160,16 @@ class Basic_GUI(QWidget):
             self.Prot_list.clear()
             self.Remote_list.clear()
             self.exe_btn.setEnabled(True)
+            self.clipboard_btn.setDisabled(True)
+            self.open_btn.setDisabled(True)
+            self.exe_label.clear()
 
     @pyqtSlot()
-    def load_msg(self):
+    def open_file(self):
         self.SUM_list.clear()
         self.App_list.clear()
         self.Prot_list.clear()
         self.Remote_list.clear()
-        self.paste_btn.setDisabled(True)
-        self.paste_te.clear()
 
         fname = QFileDialog.getOpenFileName(self,'Load file','',"Text files(*.txt)")
         opened_file = fname[0]
@@ -205,15 +182,11 @@ class Basic_GUI(QWidget):
                     print("read fail")
                 for n in range(len(self.msg_all)):
                     self.msg_all[n] = self.msg_all[n].replace('\n', '')
-        self.opened_label.setText(opened_file)
-        self.exe_btn.setEnabled(True)
 
         self.msg_start, self.msg_end, self.msg_SN, self.msg_port, self.msg_type, self.msg_data \
             = msg_item.process(self.msg_all)
 
-        self.load_type = 'File'
-
-        if debug_mode :
+        if debug_mode:
             print('[File Name]', opened_file)
             print('msg_start :', len(self.msg_start), self.msg_start)
             print('msg_end   :', len(self.msg_end), self.msg_end)
@@ -223,32 +196,56 @@ class Basic_GUI(QWidget):
             print('msg_data  :', len(self.msg_data), self.msg_data)
             print()
 
-    @pyqtSlot()
-    def load_msg_2(self):
-        self.exe_btn.setEnabled(True)
-        self.paste_btn.setDisabled(True)
-
-        self.msg_all = self.paste_te.toPlainText()
-        self.msg_all = self.msg_all.split('\n')
-
-        if '[0x19B7]' in self.msg_all[0]:
-            self.msg_start, self.msg_end, self.msg_SN, self.msg_port, self.msg_type, self.msg_data \
-                = msg_item.process2(self.msg_all)
-
-            self.load_type = 'Paste'
-
-            if debug_mode :
-                print('[PASTE RESULT]')
-                print('msg_start :', len(self.msg_start), self.msg_start)
-                print('msg_end   :', len(self.msg_end), self.msg_end)
-                print('msg_SN    :', len(self.msg_SN), self.msg_SN)
-                print('msg_port  :', len(self.msg_port), self.msg_port)
-                print('msg_type  :', len(self.msg_type), self.msg_type)
-                print('msg_data  :', len(self.msg_data), self.msg_data)
-                print()
+        if self.msg_data:
+            self.opened_label.setText('APDU logs included in <'+opened_file+'>')
+            self.open_btn.setDisabled(True)
+            self.clipboard_btn.setDisabled(True)
+            self.exe_btn.setEnabled(True)
+            self.comb_box.setEnabled(True)
+            self.load_type = 'File'
         else:
+            self.opened_label.setText('APDU logs "NOT" included in <'+opened_file+'>')
+            self.open_btn.setEnabled(True)
+            self.clipboard_btn.setEnabled(True)
             self.exe_btn.setDisabled(True)
-            self.paste_btn.setEnabled(True)
+            self.comb_box.setDisabled(True)
+
+    @pyqtSlot()
+    def load_clipboard(self):
+        self.SUM_list.clear()
+        self.App_list.clear()
+        self.Prot_list.clear()
+        self.Remote_list.clear()
+
+        self.msg_all = clipboard.paste()
+        self.msg_all = self.msg_all.split('\r')
+
+        self.msg_start, self.msg_end, self.msg_SN, self.msg_port, self.msg_type, self.msg_data \
+            = msg_item.process2(self.msg_all)
+
+        if debug_mode:
+            print('[Clipboard]')
+            print('msg_start :', len(self.msg_start), self.msg_start)
+            print('msg_end   :', len(self.msg_end), self.msg_end)
+            print('msg_SN    :', len(self.msg_SN), self.msg_SN)
+            print('msg_port  :', len(self.msg_port), self.msg_port)
+            print('msg_type  :', len(self.msg_type), self.msg_type)
+            print('msg_data  :', len(self.msg_data), self.msg_data)
+            print()
+
+        if self.msg_data:
+            self.opened_label.setText('APDU logs included in clipboard (%d lines)'%len(self.msg_all))
+            self.open_btn.setDisabled(True)
+            self.clipboard_btn.setDisabled(True)
+            self.exe_btn.setEnabled(True)
+            self.comb_box.setEnabled(True)
+            self.load_type = 'Paste'
+        else:
+            self.opened_label.setText('APDU logs "NOT" included in clipboard (%d lines)'%len(self.msg_all))
+            self.open_btn.setEnabled(True)
+            self.clipboard_btn.setEnabled(True)
+            self.exe_btn.setDisabled(True)
+            self.comb_box.setDisabled(True)
 
     @pyqtSlot()
     def exe_msg(self):
@@ -258,6 +255,7 @@ class Basic_GUI(QWidget):
         self.Remote_list.clear()
         self.exe_btn.setDisabled(True)
         self.open_btn.setEnabled(True)
+        self.clipboard_btn.setEnabled(True)
 
         port_num = self.comb_box.currentIndex()+1
 
@@ -315,7 +313,7 @@ class Basic_GUI(QWidget):
             print('sum_remote    :', len(self.sum_remote), self.sum_remote)
             print()
 
-        # self.save_btn.setEnabled(True)
+        self.exe_label.setText("Complete")
 
     @pyqtSlot()
     def clicked_rst(self):
@@ -339,27 +337,27 @@ class Basic_GUI(QWidget):
             app_rst_show +=n +'\n'
         self.App_list.setPlainText(app_rst_show)
 
-    @pyqtSlot()
-    def save_msg(self):
-        save_contents =''
-
-        for n in range(len(self.sum_rst)):
-            save_contents += '='*150 + '\n'
-            save_contents += self.sum_rst[n] + '\n'
-            save_contents += '='*150 + '\n'
-            prot_rst_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data, n
-            prot_rst = msg_prot.rst(prot_rst_input)
-            for m in prot_rst[1:]:
-                save_contents += m +'\n'
-            save_contents += '\n'
-
-        save_path = QFileDialog.getSaveFileName(self,'Save file','',"Text files(*.txt)")
-        fp = open(save_path[0], "w")
-        fp.write(save_contents)
-        fp.close()
-
-        self.saved_label.setText(save_path[0])
-        self.save_btn.setDisabled(True)
+    # @pyqtSlot()
+    # def save_msg(self):
+    #     save_contents =''
+    #
+    #     for n in range(len(self.sum_rst)):
+    #         save_contents += '='*150 + '\n'
+    #         save_contents += self.sum_rst[n] + '\n'
+    #         save_contents += '='*150 + '\n'
+    #         prot_rst_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data, n
+    #         prot_rst = msg_prot.rst(prot_rst_input)
+    #         for m in prot_rst[1:]:
+    #             save_contents += m +'\n'
+    #         save_contents += '\n'
+    #
+    #     save_path = QFileDialog.getSaveFileName(self,'Save file','',"Text files(*.txt)")
+    #     fp = open(save_path[0], "w")
+    #     fp.write(save_contents)
+    #     fp.close()
+    #
+    #     self.saved_label.setText(save_path[0])
+    #     self.save_btn.setDisabled(True)
 
 
 if __name__ == '__main__':

@@ -10,8 +10,9 @@ def process(msg):
             msg_port.append(int(msg[n].split('= SLOT_')[1]))
         if 'Message Type' in msg[n]:
             msg_type.append(msg[n].split('= ')[1])
-    msg_end.remove(msg_start[0]-1)
-    msg_end.append(len(msg)-1)
+    if msg_end:
+        msg_end.remove(msg_start[0]-1)
+        msg_end.append(len(msg)-1)
 
     msg_data = []
     for m in range(len(msg_start)):
@@ -35,12 +36,16 @@ def process(msg):
 
 def process2(msg_all):
     msg_start, msg_end, msg_SN, msg_port, msg_type, msg_data = [], [], [], [], [], []
+
+    if '19B7' not in msg_all[0]:
+        return [], [], [], [], [], []
+
     cnt = 0
-    cont_flag = 0
+    CONTINUED = 0
     for n in range(len(msg_all)):
         if msg_all[n] == '': break
         cnt += 1
-        if cont_flag == 0:
+        if CONTINUED == 0:
             msg_start.append(n)
             msg_end.append(n)
             msg_SN.append(cnt)
@@ -59,15 +64,16 @@ def process2(msg_all):
                 msg_data.append(type.split("=")[1].replace(' ', ''))
                 if '{' in msg_data[-1]:
                     msg_data[-1] = msg_data[-1].split('{')[1]
-                    if msg_data[-1] != '':
-                        msg_data[-1] = msg_data[-1].replace('}', '')
+                    if msg_data[-1] == '':
+                        CONTINUED = 1
                     else:
-                        cont_flag = 1
+                        msg_data[-1] = msg_data[-1].replace('}', '')
         else:
             if msg_all[n] != '}':
                 msg_data[-1] += msg_all[n].replace(' ','')
             else:
-                cont_flag = 0
+                CONTINUED = 0
+
         # print(msg_SN[-1], msg_port[-1], msg_type[-1], msg_data[-1])
     return msg_start, msg_end, msg_SN, msg_port, msg_type, msg_data
 
