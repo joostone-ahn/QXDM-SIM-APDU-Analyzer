@@ -14,7 +14,7 @@ BoldFont.setBold(True)
 CourierNewFont = QtGui.QFont()
 CourierNewFont.setFamily("Courier New")
 
-debug_mode = 0
+debug_mode = 1
 
 class Basic_GUI(QWidget):
 
@@ -39,11 +39,31 @@ class Basic_GUI(QWidget):
         hbox1.addWidget(self.opened_label)
         # hbox1.addStretch()
 
+        self.paste_btn = QPushButton("Paste")
+        self.paste_btn.setFont(CourierNewFont)
+        self.paste_btn.setFixedWidth(100)
+        self.paste_btn.setCheckable(False)
+        self.paste_btn.setDisabled(True)
+
+        self.paste_btn.clicked.connect(self.load_msg_2)
+
+        self.paste_te = QPlainTextEdit()
+        self.paste_te.setFixedHeight(50)
+        self.paste_te.setFont(CourierNewFont)
+        self.paste_te.textChanged.connect(self.text_paste)
+
+        hbox2 = QHBoxLayout()
+        hbox2.addWidget(self.paste_btn)
+        hbox2.addWidget(self.paste_te)
+
+
         self.comb_box = QComboBox()
         self.comb_box.addItem("SIM1")
         self.comb_box.addItem("SIM2")
         self.comb_box.setFixedWidth(100)
         self.comb_box.setFont(CourierNewFont)
+
+        self.comb_box.currentIndexChanged.connect(self.comb_changed)
 
         self.exe_btn = QPushButton("Execute")
         self.exe_btn.setFixedWidth(100)
@@ -53,22 +73,22 @@ class Basic_GUI(QWidget):
 
         self.exe_btn.clicked.connect(self.exe_msg)
 
-        self.save_btn = QPushButton("Save")
-        self.save_btn.setFixedWidth(100)
-        self.save_btn.setCheckable(False)
-        self.save_btn.setFont(CourierNewFont)
-        self.save_btn.setDisabled(True)
+        # self.save_btn = QPushButton("Save")
+        # self.save_btn.setFixedWidth(100)
+        # self.save_btn.setCheckable(False)
+        # self.save_btn.setFont(CourierNewFont)
+        # self.save_btn.setDisabled(True)
+        #
+        # self.save_btn.clicked.connect(self.save_msg)
+        #
+        # self.saved_label = QLabel()
 
-        self.save_btn.clicked.connect(self.save_msg)
-
-        self.saved_label = QLabel()
-
-        hbox2 = QHBoxLayout()
-        hbox2.addWidget(self.comb_box)
-        hbox2.addWidget(self.exe_btn)
-        hbox2.addWidget(self.save_btn)
-        hbox2.addWidget(self.saved_label)
-        hbox2.addStretch()
+        hbox3 = QHBoxLayout()
+        hbox3.addWidget(self.comb_box)
+        hbox3.addWidget(self.exe_btn)
+        # hbox3.addWidget(self.save_btn)
+        # hbox3.addWidget(self.saved_label)
+        hbox3.addStretch()
 
         self.SUM_label = QLabel()
         self.SUM_label.setText("Summary")
@@ -95,9 +115,9 @@ class Basic_GUI(QWidget):
         App_vbox.addWidget(self.App_label)
         App_vbox.addWidget(self.App_list)
 
-        hbox3 = QHBoxLayout()
-        hbox3.addLayout(SUM_vbox)
-        hbox3.addLayout(App_vbox)
+        hbox4 = QHBoxLayout()
+        hbox4.addLayout(SUM_vbox)
+        hbox4.addLayout(App_vbox)
         # hbox3.addStretch()
 
         self.Remote_label = QLabel()
@@ -120,25 +140,50 @@ class Basic_GUI(QWidget):
         Prot_vbox.addWidget(self.Prot_label)
         Prot_vbox.addWidget(self.Prot_list)
 
-        hbox4 = QHBoxLayout()
-        hbox4.addLayout(SUM_File_vbox)
-        hbox4.addLayout(Prot_vbox)
+        hbox5 = QHBoxLayout()
+        hbox5.addLayout(SUM_File_vbox)
+        hbox5.addLayout(Prot_vbox)
         # hbox4.addStretch()
 
         vbox = QVBoxLayout()
         vbox.addLayout(hbox1)
         vbox.addLayout(hbox2)
-        vbox.addWidget(QLabel())
         vbox.addLayout(hbox3)
         vbox.addWidget(QLabel())
         vbox.addLayout(hbox4)
+        vbox.addWidget(QLabel())
+        vbox.addLayout(hbox5)
         vbox.addWidget(QLabel())
         vbox.addWidget(QLabel("Copyright 2022. JUSEOK AHN<ajs3013@lguplus.co.kr> all rights reserved."))
         # vbox.addStretch()
 
         self.setLayout(vbox)
-        self.setWindowTitle('Dual SIM APDU Analyzer (beta)')
+        self.setWindowTitle('Dual SIM APDU Analyzer v1.0')
         self.showMaximized()
+
+    @pyqtSlot()
+    def text_paste(self):
+        self.SUM_list.clear()
+        self.App_list.clear()
+        self.Prot_list.clear()
+        self.Remote_list.clear()
+        self.paste_btn.setEnabled(True)
+        self.open_btn.setDisabled(True)
+        self.exe_btn.setDisabled(True)
+        self.opened_label.setText('')
+
+        if self.paste_te.toPlainText() == '':
+            self.open_btn.setEnabled(True)
+            self.paste_btn.setDisabled(True)
+
+    @pyqtSlot()
+    def comb_changed(self):
+        if self.opened_label.text() or '19B7' in self.paste_te.toPlainText():
+            self.SUM_list.clear()
+            self.App_list.clear()
+            self.Prot_list.clear()
+            self.Remote_list.clear()
+            self.exe_btn.setEnabled(True)
 
     @pyqtSlot()
     def load_msg(self):
@@ -146,6 +191,8 @@ class Basic_GUI(QWidget):
         self.App_list.clear()
         self.Prot_list.clear()
         self.Remote_list.clear()
+        self.paste_btn.setDisabled(True)
+        self.paste_te.clear()
 
         fname = QFileDialog.getOpenFileName(self,'Load file','',"Text files(*.txt)")
         opened_file = fname[0]
@@ -164,6 +211,8 @@ class Basic_GUI(QWidget):
         self.msg_start, self.msg_end, self.msg_SN, self.msg_port, self.msg_type, self.msg_data \
             = msg_item.process(self.msg_all)
 
+        self.load_type = 'File'
+
         if debug_mode :
             print('[File Name]', opened_file)
             print('msg_start :', len(self.msg_start), self.msg_start)
@@ -175,11 +224,40 @@ class Basic_GUI(QWidget):
             print()
 
     @pyqtSlot()
+    def load_msg_2(self):
+        self.exe_btn.setEnabled(True)
+        self.paste_btn.setDisabled(True)
+
+        self.msg_all = self.paste_te.toPlainText()
+        self.msg_all = self.msg_all.split('\n')
+
+        if '[0x19B7]' in self.msg_all[0]:
+            self.msg_start, self.msg_end, self.msg_SN, self.msg_port, self.msg_type, self.msg_data \
+                = msg_item.process2(self.msg_all)
+
+            self.load_type = 'Paste'
+
+            if debug_mode :
+                print('[PASTE RESULT]')
+                print('msg_start :', len(self.msg_start), self.msg_start)
+                print('msg_end   :', len(self.msg_end), self.msg_end)
+                print('msg_SN    :', len(self.msg_SN), self.msg_SN)
+                print('msg_port  :', len(self.msg_port), self.msg_port)
+                print('msg_type  :', len(self.msg_type), self.msg_type)
+                print('msg_data  :', len(self.msg_data), self.msg_data)
+                print()
+        else:
+            self.exe_btn.setDisabled(True)
+            self.paste_btn.setEnabled(True)
+
+    @pyqtSlot()
     def exe_msg(self):
         self.SUM_list.clear()
         self.App_list.clear()
         self.Prot_list.clear()
         self.Remote_list.clear()
+        self.exe_btn.setDisabled(True)
+        self.open_btn.setEnabled(True)
 
         port_num = self.comb_box.currentIndex()+1
 
@@ -212,7 +290,7 @@ class Basic_GUI(QWidget):
 
         sum_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data
         self.sum_rst, self.sum_log_ch, self.sum_log_ch_id, self.sum_read, self.sum_error, self.sum_remote \
-            = msg_sum.rst(sum_input)
+            = msg_sum.rst(sum_input, self.load_type)
         for n in self.sum_rst:
             self.SUM_list.addItem(n)
         for n in self.sum_remote:
@@ -237,7 +315,7 @@ class Basic_GUI(QWidget):
             print('sum_remote    :', len(self.sum_remote), self.sum_remote)
             print()
 
-        self.save_btn.setEnabled(True)
+        # self.save_btn.setEnabled(True)
 
     @pyqtSlot()
     def clicked_rst(self):
@@ -247,7 +325,7 @@ class Basic_GUI(QWidget):
         item_num = self.SUM_list.currentRow()
 
         prot_rst_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data
-        prot_rst = msg_prot.rst(prot_rst_input, item_num)
+        prot_rst = msg_prot.rst(prot_rst_input, item_num, self.load_type)
         prot_rst_show = ''
         for n in prot_rst:
             prot_rst_show +=n +'\n'
@@ -255,7 +333,7 @@ class Basic_GUI(QWidget):
 
         app_rst_input1 = self.msg_all, self.prot_start, self.prot_end
         app_rst_input2 = self.prot_type, self.sum_log_ch, self.sum_log_ch_id
-        app_rst = msg_app.rst(app_rst_input1, app_rst_input2, self.sum_read, self.sum_error, item_num)
+        app_rst = msg_app.rst(app_rst_input1, app_rst_input2, self.sum_read, self.sum_error, item_num, self.load_type)
         app_rst_show = ''
         for n in app_rst:
             app_rst_show +=n +'\n'

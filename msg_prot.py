@@ -78,7 +78,7 @@ def process(input):
     return prot_start, prot_end, prot_type, prot_data
 
 
-def rst(input, item_num):
+def rst(input, item_num, load_type):
     msg_all, prot_start, prot_type, prot_data = input
     start = prot_start[item_num]
     type = prot_type[item_num]
@@ -88,7 +88,10 @@ def rst(input, item_num):
     if data[0]:
         prot_rst.append('-' * 150)
         for n in range(len(data)):
-            rst_time = msg_all[start[n]].split('  ')[1].split('  [')[0]
+            if load_type == 'File':
+                rst_time = msg_all[start[n]].split('  ')[1].split('  [')[0]
+            elif load_type == 'Paste':
+                rst_time = msg_all[start[n]].split('                 ')[1].split(' ')[0]
             if 'RX' in type[n]: rst_type = '[RX]'
             elif 'TX' in type[n]: rst_type = '[TX]'
 

@@ -3,9 +3,10 @@ import SELECT
 import READ
 import file_system
 import short_file_id
+from datetime import datetime
 debug_mode = 0
 
-def rst(input):
+def rst(input, load_type):
     msg_all, prot_start, prot_type, prot_data = input
     sum_rst, sum_log_ch, sum_log_ch_id, sum_read, sum_error = [], [], [], [], []
     sum_remote, sum_remote_list = READ.init()
@@ -17,8 +18,11 @@ def rst(input):
 
         num_max = len(str(len(prot_start)))+1 # including '['
         num = ' '*(num_max-len(str(m+1))) + '[' + str(m+1) + ']'
-        time = msg_all[prot_start[m][0]].split('  ')[1].split('  [')[0]
         type = prot_type[m][0]
+        if load_type == 'File':
+            time = msg_all[prot_start[m][0]].split('  ')[1].split('  [')[0]
+        elif load_type == 'Paste':
+            time = msg_all[prot_start[m][0]].split('                 ')[1].split(' ')[0]
 
         if type != 'TX' and type != 'RX': # RESET, ATR
             sum_rst.append(num + '  ' + time + '  ' + type)

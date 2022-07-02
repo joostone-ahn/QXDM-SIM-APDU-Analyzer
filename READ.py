@@ -8,7 +8,7 @@ def process(ins, file_name, data, sum_read, sum_remote, sum_remote_list):
     for n in range(file_data_lines):
         if n > 0: file_data += ' '*len(' Read Contents   : ')
         file_data += data[1][2:-4][n*130:(n+1)*130]
-        if file_data_lines > 1 : file_data += '\n'
+        if file_data_lines > 1 and n!= file_data_lines-1 : file_data += '\n'
     sum_read.append([[file_data]])  # sum_read[n][0] = [file_data]
 
     if ins == 'B0':
@@ -101,7 +101,7 @@ def parser(file_name, data, offset):
                 if parsing != '': parsing += '\n' + ' '*len(' Read Parsing    : ')
                 MCC = n[:-4][1] + n[:-4][0] + n[:-4][3]
                 MNC = n[:-4][5] + n[:-4][4] + n[:-4][2]
-                if 'F' in MNC: MNC = MNC.replace('F',' ')
+                # if 'F' in MNC: MNC = MNC.replace('F',' ')
                 if n[-4:] in AccessTech:
                     AcT = AccessTech[n[-4:]]
                 else:
@@ -120,7 +120,7 @@ def parser(file_name, data, offset):
                 if parsing != '': parsing += '\n' + ' '*len(' Read Parsing    : ')
                 MCC = n[1] + n[0] + n[3]
                 MNC = n[5] + n[4] + n[2]
-                if 'F' in MNC: MNC = MNC.replace('F',' ')
+                # if 'F' in MNC: MNC = MNC.replace('F',' ')
                 parsing += '[FPLMN %2d]'%(cnt+int(int(offset, 16)/10*2)) + ' MCC %s' % MCC + ' MNC %s' % MNC
     elif file_name == 'MSISDN':
         byte_array = bytearray.fromhex(data[:32].split('FFFF')[0])
@@ -131,6 +131,8 @@ def parser(file_name, data, offset):
             parsing += Num[2*n+1]
             parsing += Num[2*n]
         # parsing += " (Alpha Id/TON and NPI/Dialling Num)"
+    elif file_name in ['SUCI_Calc_Info', 'Routing_Indicator']:
+        parsing += data
     return parsing
 
 AccessTech = dict()
