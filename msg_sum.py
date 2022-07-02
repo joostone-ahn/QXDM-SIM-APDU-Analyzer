@@ -98,6 +98,8 @@ def rst(input, load_type):
             # sum_read, sum_remote
             if ins == 'B0' or ins == 'B2':
                 if sw == '9000' or sw[:2] == '91':
+                    if SFI_used == False: file_name, error \
+                        = file_system.process(log_ch[log_ch_id][0], log_ch[log_ch_id][1], last_file_id)
                     sum_read, sum_remote \
                         = READ.process(ins, file_name, prot_data[m], sum_read, sum_remote, sum_remote_list)
                 else:
