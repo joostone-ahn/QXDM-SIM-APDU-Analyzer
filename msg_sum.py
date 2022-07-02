@@ -52,10 +52,8 @@ def rst(input, load_type):
             if debug_mode: print('log_ch_id      :', sum_log_ch_id[-1])
 
             if sum_rst:
-                if 'SELECT(X)' in sum_rst[-1]:
+                if 'SELECT (X)' in sum_rst[-1]:
                     log_ch[log_ch_id][1] = ''
-                    # if prot_data[m][0][2:4] != 'A4':
-                    #     print(sum_rst[-1])
 
             # log_ch
             file_name, error = '',''
