@@ -80,8 +80,9 @@ def parser(file_name, data, offset):
             parsing += data[2*n]
         parsing = parsing[1:]
     elif file_name in ['IMPI', 'IMPU', 'P-CSCF']:
-        byte_array = bytearray.fromhex(data[4:4+int(data[2:4],16)*2])
-        parsing += byte_array.decode()
+        if data[2:4] != 'FF': # IMPU [0x] not used
+            byte_array = bytearray.fromhex(data[4:4+int(data[2:4],16)*2])
+            parsing += byte_array.decode()
     elif file_name == 'ACC':
         parsing += 'BIN ' + format(int(data[:2], 16), 'b').zfill(8)
         parsing += ' ' + format(int(data[2:], 16), 'b').zfill(8)

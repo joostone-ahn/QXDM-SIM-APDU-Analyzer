@@ -86,12 +86,14 @@ def rst(input, load_type):
 
             # sum_log_ch
             sum_log_ch.append(log_ch[log_ch_id][0:2])
+            if debug_mode: print('sum_log_ch     :', sum_log_ch[-1])
 
             # sum_rst
             if sw != '9000' and sw[:2] != '91' and ins[0] != '2': cmd += '(X)'
             cmd_len_max = len(command.cmd_name['AA'])+8  # TERMINAL CAPABILITY
             sum_rst.append(num + '  ' + time + '  ' + cmd + ' ' * (cmd_len_max - len(cmd)))
             if file_name: sum_rst[-1] += '  ' + file_name
+            if debug_mode: print('sum_rst        :', sum_rst[-1])
 
             # sum_read, sum_remote
             if ins == 'B0' or ins == 'B2':
@@ -102,6 +104,9 @@ def rst(input, load_type):
                     sum_read.append(['', ''])
             else:
                 sum_read.append(['', ''])
+            if debug_mode: print('sum_read       :', sum_read[-1])
+            if debug_mode: print('sum_remote     :', sum_remote)
+
 
             # sum_error (R-APDU TBD)
             if sw == '6A82': # ETSI ts102.221 Table 10.14
@@ -111,11 +116,8 @@ def rst(input, load_type):
                 if error: error = 'unsuccessful search (SW:6282)' + error
                 else: error = 'unsuccessful search (SW:6282)'
             sum_error.append(error)
+            if debug_mode: print('error          :', sum_error[-1])
 
-        if debug_mode: print('sum_log_ch     :', sum_log_ch[-1])
-        if debug_mode: print('sum_rst        :', sum_rst[-1])
-        if debug_mode: print('sum_read       :', sum_read[-1])
-        if debug_mode: print('error          :', sum_error[-1])
         if debug_mode: print()
 
     return sum_rst, sum_log_ch, sum_log_ch_id, sum_read, sum_error, sum_remote
