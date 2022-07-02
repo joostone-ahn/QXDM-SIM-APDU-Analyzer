@@ -9,7 +9,7 @@ This tool helps you to overcome the above limits.
  - APDU logs from pSIM or eSIM can be sorted by user's selection.
 
 
-[Guide1]
+[Guide]
 1) run main.py
 2) click 'Open file' or 'Clipboard' button
 3) select SIM1 or SIM2
