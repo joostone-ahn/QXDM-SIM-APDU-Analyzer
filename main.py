@@ -113,16 +113,15 @@ class Basic_GUI(QWidget):
         hbox3.addLayout(App_vbox)
         # hbox3.addStretch()
 
-        self.Remote_label = QLabel()
-        self.Remote_label.setText("SIM information and OTA updated")
-        self.Remote_label.setFont(CourierNewFont)
-        self.Remote_list = QListWidget()
-        self.Remote_list.setAutoScroll(True)
-        self.Remote_list.setFixedWidth(630)
-        self.Remote_list.setFont(CourierNewFont)
+        self.SIM_Info_label = QLabel()
+        self.SIM_Info_label.setText("SIM information and OTA updated")
+        self.SIM_Info_label.setFont(CourierNewFont)
+        self.SIM_Info_list = QTextBrowser()
+        self.SIM_Info_list.setFixedWidth(630)
+        self.SIM_Info_list.setFont(CourierNewFont)
         SUM_File_vbox = QVBoxLayout()
-        SUM_File_vbox.addWidget(self.Remote_label)
-        SUM_File_vbox.addWidget(self.Remote_list)
+        SUM_File_vbox.addWidget(self.SIM_Info_label)
+        SUM_File_vbox.addWidget(self.SIM_Info_list)
 
         self.Prot_label = QLabel()
         self.Prot_label.setText("Protocol-Level Analysis")
@@ -158,7 +157,7 @@ class Basic_GUI(QWidget):
             self.SUM_list.clear()
             self.App_list.clear()
             self.Prot_list.clear()
-            self.Remote_list.clear()
+            self.SIM_Info_list.clear()
             self.exe_btn.setEnabled(True)
             self.clipboard_btn.setDisabled(True)
             self.open_btn.setDisabled(True)
@@ -169,7 +168,7 @@ class Basic_GUI(QWidget):
         self.SUM_list.clear()
         self.App_list.clear()
         self.Prot_list.clear()
-        self.Remote_list.clear()
+        self.SIM_Info_list.clear()
 
         fname = QFileDialog.getOpenFileName(self,'Load file','',"Text files(*.txt)")
         opened_file = fname[0]
@@ -217,7 +216,7 @@ class Basic_GUI(QWidget):
         self.SUM_list.clear()
         self.App_list.clear()
         self.Prot_list.clear()
-        self.Remote_list.clear()
+        self.SIM_Info_list.clear()
 
         self.msg_all = clipboard.paste()
         self.msg_all = self.msg_all.split('\r')
@@ -258,7 +257,7 @@ class Basic_GUI(QWidget):
         self.SUM_list.clear()
         self.App_list.clear()
         self.Prot_list.clear()
-        self.Remote_list.clear()
+        self.SIM_Info_list.clear()
         self.exe_btn.setDisabled(True)
         self.open_btn.setEnabled(True)
         self.clipboard_btn.setEnabled(True)
@@ -297,20 +296,23 @@ class Basic_GUI(QWidget):
             = msg_sum.rst(sum_input, self.load_type)
         for n in self.sum_rst:
             self.SUM_list.addItem(n)
+
+        sum_remote_show = ''
         for n in self.sum_remote:
             if '[' in n[0]:
                 if 'MSISDN' in n[0]: n[0] = n[0].split(' ')[0]
                 else: n[0] = n[0].split(' ')[1] + ' ' + n[0].split(' ')[0]
             if len(n)==2:
                 if n[0] in ['ICCID', 'IMSI', 'MSISDN', 'IMPI'] :
-                    self.Remote_list.addItem('-' * 85)
-                    self.Remote_list.addItem('%10s'%n[0] + '   ' + n[1].replace('   ',' '))
+                    sum_remote_show += '-' * 85 + '\n'
+                    sum_remote_show += '%10s' % n[0] + '   ' + n[1].replace('   ', ' ') + '\n'
             if len(n)>2:
-                self.Remote_list.addItem('-' * 85)
-                self.Remote_list.addItem('%10s'%n[0] + '   ' + n[1].replace('   ',' '))
-                self.Remote_list.addItem('%10s'%">>>" + '   ' + n[2].replace('   ',' '))
-        if self.Remote_list:
-            self.Remote_list.addItem('-' * 85)
+                sum_remote_show += '-' * 85 + '\n'
+                sum_remote_show += '%10s' % n[0] + '   ' + n[1].replace('   ', ' ') + '\n'
+                sum_remote_show += '%10s' % ">>>" + '   ' + n[2].replace('   ', ' ') + '\n'
+        if sum_remote_show:
+            sum_remote_show += '-' * 85
+            self.SIM_Info_list.setText(sum_remote_show)
 
         if debug_mode :
             print('[ SUMMARY FILTER ]')
