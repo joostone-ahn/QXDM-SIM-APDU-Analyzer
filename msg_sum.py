@@ -58,6 +58,7 @@ def rst(input, load_type):
             # log_ch
             file_name, error = '',''
             ins = prot_data[m][0][2:4]
+            if debug_mode: print('INS byte       :', ins)
             if ins in command.cmd_name:
                 cmd = command.cmd_name[ins]
                 if ins == 'A4': # SELECT
@@ -79,7 +80,6 @@ def rst(input, load_type):
                     cmd += ' (%s)'%file_name.split(' ')[1].replace(']','')
                     file_name = ''
                 elif ins == '70':
-                    # print(prot_data[m])
                     if prot_data[m][0][4:6] == '80': cmd += ' (CLOSE: %d)'%int(prot_data[m][0][6:8],16)
                     elif prot_data[m][0][4:6] == '00':
                         if prot_data[m][0][6:8] == '00': cmd += ' (OPEN: %d)'%int(prot_data[m][1][2:4],16)
@@ -109,7 +109,6 @@ def rst(input, load_type):
 
             else:
                 cmd = "Unknown (INS:%s)"%ins
-            if debug_mode: print('INS byte       :', ins)
             if debug_mode: print('command name   :', cmd)
             if debug_mode: print('file name      :', file_name)
             if debug_mode: print('log_ch         :', log_ch)
@@ -120,7 +119,7 @@ def rst(input, load_type):
 
             # sum_rst
             if sw != '9000' and sw[:2] != '91' and ins[0] != '2': cmd += ' (X)'
-            sum_rst.append(num + '  ' + time + '  ' +'%-40s'%cmd)
+            sum_rst.append(num + '  ' + time + '  ' +'%-42s'%cmd)
             if file_name: sum_rst[-1] += file_name
             if debug_mode: print('sum_rst        :', sum_rst[-1])
 

@@ -20,7 +20,8 @@ def process(data, log_ch, log_ch_id):
                     log_ch[log_ch_id][0] = log_ch[log_ch_id][2]
                 else:
                     if data[-1][-4:] == '9000' or data[-1][-4:-2] == '91':
-                        log_ch[log_ch_id][0] = data[-1][18:50]
+                        if 'A00000008710' in data[-1]:
+                            log_ch[log_ch_id][0] = 'A00000008710' + data[-1].split('A00000008710')[1][:20]
                     else:
                         log_ch[log_ch_id][0] = '' # Last selected AID not decided
             else:

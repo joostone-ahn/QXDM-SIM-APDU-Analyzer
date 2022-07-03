@@ -4,8 +4,8 @@ Proactive_type = dict()
 
 Proactive_type['01'] = 'REFRESH'
 Proactive_type['03'] = 'POLL INTERVAL'
-Proactive_type['05'] = 'SET UP EVENT LIST'
-Proactive_type['25'] = 'SET UP MENU'
+Proactive_type['05'] = 'SETUP EVENT LIST'
+Proactive_type['25'] = 'SETUP MENU'
 Proactive_type['40'] = 'OPEN CHANNEL'
 Proactive_type['41'] = 'CLOSE CHANNEL'
 Proactive_type['42'] = 'RECEIVE DATA'

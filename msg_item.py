@@ -1,4 +1,4 @@
-debug_mode = 1
+debug_mode = 0
 
 def process(msg):
     msg_start, msg_end, msg_SN, msg_port, msg_type = [],[],[],[],[]
@@ -77,11 +77,14 @@ def process2(msg_all):
                 msg_end[-1] = n
                 cnt = cnt_prev
                 CONTINUED = 0
-        # print(msg_start[-1], msg_end[-1], msg_SN[-1], msg_port[-1], msg_type[-1], msg_data[-1])
+
+        if n>0 and msg_data[-1] == msg_data[-2] and msg_port[-1] == msg_port[-2]:
+            cnt = msg_SN[-1]-1
+            del msg_start[-1], msg_end[-1], msg_SN[-1], msg_port[-1], msg_type[-1], msg_data[-1]
 
     if debug_mode:
         for n in range(len(msg_data)):
-            print(msg_SN[n], msg_port[n], msg_type[n], msg_data[n])
+            print('%4s'%msg_SN[n], msg_port[n], msg_type[n], msg_data[n])
 
     return msg_start, msg_end, msg_SN, msg_port, msg_type, msg_data
 

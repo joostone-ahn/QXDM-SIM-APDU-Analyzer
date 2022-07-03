@@ -1,4 +1,4 @@
-debug_mode = 1
+debug_mode = 0
 
 def process(input):
     exe_start, exe_end, exe_type, exe_data = input
