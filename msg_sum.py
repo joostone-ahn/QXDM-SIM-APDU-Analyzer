@@ -21,8 +21,11 @@ def rst(input, load_type):
         type = prot_type[m][0]
         if load_type == 'File':
             time = msg_all[prot_start[m][0]].split('  ')[1].split('  [')[0]
+            if ':' not in time: time = 'TIME ERROR'
+            time = '%-12s'%time
         elif load_type == 'Paste':
             time = msg_all[prot_start[m][0]].split('                 ')[1].split(' ')[0]
+            time = '%-12s'%time
 
         if type != 'TX' and type != 'RX': # RESET, ATR
             sum_rst.append(num + '  ' + time + '  ' + type)
