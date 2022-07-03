@@ -1,4 +1,4 @@
-debug_mode = 0
+debug_mode = 1
 
 def process(input):
     exe_start, exe_end, exe_type, exe_data = input
@@ -9,6 +9,11 @@ def process(input):
 
     cmd_cnt = 0
     for n in range(len(exe_start)):
+        if debug_mode:
+            print("exe_type   :", [exe_type[n]])
+            print("cmd_cnt    :", cmd_cnt)
+            print("exe_data   :", [exe_data[n]])
+            print("")
         if exe_type[n] != 'TX' and exe_type[n] != 'RX':
             prot_start.append([exe_start[n]])
             prot_end.append([exe_end[n]])
