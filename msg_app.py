@@ -3,30 +3,34 @@ debug_mode = 0
 
 def rst(input1, input2, read, error, item_num, load_type):
     msg_all, prot_start, prot_end = input1
-    prot_type, log_ch, log_ch_id = input2
+    prot_type, sum_log_ch, sum_log_ch_id = input2
 
     start = prot_start[item_num]
     end = prot_end[item_num]
-    if debug_mode: print(log_ch)
+    log_ch = sum_log_ch[item_num]
+    log_ch_id = sum_log_ch_id[item_num]
+
+    if debug_mode: print(log_ch_id, log_ch)
 
     app_rst = []
     if prot_type[item_num][0] == 'TX':
         app_rst = ['=' * 150]
-        app_rst.append(' Logical Channel : %s' % str(log_ch_id[item_num]))
-        if log_ch_id[item_num] >= 4: app_rst[-1] += ' [Extended]'
+        app_rst.append(' Logical Channel : %s' % str(log_ch_id))
+        if log_ch_id >= 4: app_rst[-1] += ' [Extended]'
         if debug_mode: print(app_rst[-1])
 
-        app_rst.append(' Current DF File : %s' % log_ch[item_num][0])
-        if log_ch[item_num][0]:
-            if log_ch[item_num][0] in file_system.DF_name:
-                app_rst[-1] += ' [' + file_system.DF_name[log_ch[item_num][0]] + ']'
+        app_rst.append(' Current DF File : %s' % log_ch[0])
+        if log_ch[0]:
+            if log_ch[0] in file_system.DF_name:
+                app_rst[-1] += ' [' + file_system.DF_name[log_ch[0]] + ']'
         if debug_mode: print(app_rst[-1])
 
-        app_rst.append(' Current EF File : %s' % log_ch[item_num][1])
-        if log_ch[item_num][0] and log_ch[item_num][1]:
-            if log_ch[item_num][0] in file_system.DF_name:
-                if log_ch[item_num][1] in file_system.EF_name[log_ch[item_num][0]]:
-                    app_rst[-1] += ' [' + file_system.EF_name[log_ch[item_num][0]][log_ch[item_num][1]] + ']'
+        app_rst.append(' Current EF File : %s' % log_ch[1])
+        if log_ch[0] and log_ch[1]:
+            if log_ch[0] in file_system.DF_name:
+                if log_ch[0] in file_system.EF_name:
+                    if log_ch[1] in file_system.EF_name[log_ch[0]]:
+                        app_rst[-1] += ' [' + file_system.EF_name[log_ch[0]][log_ch[1]] + ']'
         if debug_mode: print(app_rst[-1])
         app_rst.append('=' * 150)
 
@@ -42,7 +46,7 @@ def rst(input1, input2, read, error, item_num, load_type):
                 app_rst.append(' Read Contents   : %s'%read[item_num][0][0])
                 if len(read[item_num][0])>1: app_rst.append(' Read Parsing    : %s'%read[item_num][0][1])
             app_rst.append('=' * 150)
-        if debug_mode: print(app_rst[-1])
+        if debug_mode: print()
 
         if error[item_num]:
             app_rst.append(' ERROR Contents  : %s'%error[item_num])

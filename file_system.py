@@ -1,13 +1,19 @@
+debug_mode = 0
+
 def process(current_DF, current_EF, file_id):
     error = ''
     if current_EF:
         if current_DF:
             if current_DF in DF_name:
-                if current_EF in EF_name[current_DF]:
-                    file_name = EF_name[current_DF][current_EF]
-                else:
+                if current_DF in EF_name:
+                    if current_EF in EF_name[current_DF]:
+                        file_name = EF_name[current_DF][current_EF]
+                    else:
+                        file_name = file_id
+                        error = '*Non-standard'
+                else: # CSIM EF file
                     file_name = file_id
-                    error = '*Non-standard'
+                    error = '*CSIM parsing not supported'
             else:
                 file_name = file_id
                 error = '*Non-standard'
@@ -24,6 +30,7 @@ def process(current_DF, current_EF, file_id):
         else:
             file_name = file_id #'7FFF'
             error = 'AID not decided'
+    if debug_mode: print(current_DF, current_EF, file_name, error)
     if file_name: file_name = '[%s]'%file_name
     return file_name, error
 
@@ -69,6 +76,7 @@ DF_name['7FFF5FC0'] = 'DF 5GS'
 DF_name['A0000000871004FF82FFFF89010000FF'] = 'ADF ISIM' #L
 DF_name['A0000000871004FF82FFFF89040300FF'] = 'ADF ISIM' #S
 
+DF_name['A0000003431002FF82FFFF89010000FF'] = 'ADF CSIM' #L
 
 # 3GPP ts31.102 Release16
 EF_name ={
