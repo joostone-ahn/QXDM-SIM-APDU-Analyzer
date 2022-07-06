@@ -85,9 +85,10 @@ def rst(input, load_type):
                 elif ins == '70': # MANAGE CHANNEL
                     if prot_data[m][0][4:6] == '80': cmd += ' (CLOSE: %d)'%int(prot_data[m][0][6:8],16)
                     elif prot_data[m][0][4:6] == '00':
-                        if len(prot_data[m][1]) == 8 and prot_data[m][1][-4:] == '9000':
-                            if prot_data[m][0][6:8] == '00': cmd += ' (OPEN: %d)'%int(prot_data[m][1][2:4],16)
-                            else: cmd += ' (OPEN: %d)'%int(prot_data[m][0][6:8],16)
+                        if len(prot_data[m][1]) == 8:
+                            if prot_data[m][1][-4:] == '9000' or prot_data[m][1][-4:-2] == '91':
+                                if prot_data[m][0][6:8] == '00': cmd += ' (OPEN: %d)'%int(prot_data[m][1][2:4],16)
+                                else: cmd += ' (OPEN: %d)'%int(prot_data[m][0][6:8],16)
                 elif ins == '12': # FETCH
                     if debug_mode: print('FETCH check    :',prot_data[m])
                     FETCH_data = prot_data[m][1].split('810301')[1][:4]
