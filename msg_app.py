@@ -35,16 +35,18 @@ def rst(input1, input2, read, error, item_num, load_type):
         app_rst.append('=' * 150)
 
         if read[item_num][0]:
-            if len(read[item_num]) == 3:
+            if len(read[item_num]) == 3: # READ RECORD
                 app_rst.append(' Record Number   : 0x%s'%read[item_num][1])
                 app_rst.append(' Record Length   : 0x%s'%read[item_num][2]+' (%d Bytes)'%int(read[item_num][2],16))
                 app_rst.append(' Record Contents : %s'%read[item_num][0][0])
                 if len(read[item_num][0])>1: app_rst.append(' Record Parsing  : %s'%read[item_num][0][1])
-            elif len(read[item_num]) == 2:
+            elif len(read[item_num]) == 2: # READ BINARY
                 app_rst.append(' Read Offset     : 0x%s'%read[item_num][1][0])
                 app_rst.append(' Read Length     : 0x%s'%read[item_num][1][1]+' (%d Bytes)'%int(read[item_num][1][1],16))
                 app_rst.append(' Read Contents   : %s'%read[item_num][0][0])
                 if len(read[item_num][0])>1: app_rst.append(' Read Parsing    : %s'%read[item_num][0][1])
+            elif len(read[item_num]) == 1: # ETC (AUTHENTICATE, ...)
+                app_rst.append(read[item_num][0])
             app_rst.append('=' * 150)
         if debug_mode: print()
 

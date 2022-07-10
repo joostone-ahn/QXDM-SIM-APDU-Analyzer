@@ -79,9 +79,15 @@ def rst(input, load_type):
                     # else:
                     #     file_name, error = file_system.process(log_ch[log_ch_id][0], log_ch[log_ch_id][1], last_file_id)
                 elif ins == '88' or ins == '89': # AUTHENTICATE
+                    if debug_mode: print('AUTH check     :',prot_data[m])
                     file_name, error = file_system.process(log_ch[log_ch_id][0], '', last_file_id)
                     cmd += ' (%s)'%file_name.split(' ')[1].replace(']','')
                     file_name = ''
+                    RAND_len = int(prot_data[m][2][:2],16)
+                    RAND = prot_data[m][2][2:2+RAND_len*2]
+                    AUTN_len = int(prot_data[m][2][2+RAND_len*2:4+RAND_len*2],16)
+                    AUTN = prot_data[m][2][4+RAND_len*2:4+RAND_len*2+AUTN_len*2]
+                    if debug_mode: print(RAND_len, RAND, AUTN_len, AUTN)
                 elif ins == '70': # MANAGE CHANNEL
                     if prot_data[m][0][4:6] == '80': cmd += ' (CLOSE: %d)'%int(prot_data[m][0][6:8],16)
                     elif prot_data[m][0][4:6] == '00':
@@ -137,6 +143,10 @@ def rst(input, load_type):
                         = READ.process(ins, file_name, prot_data[m], sum_read, sum_remote, sum_remote_list)
                 else:
                     sum_read.append(['', ''])
+            elif ins == '88' or ins == '89':
+                sum_read.append([''])
+                sum_read[-1][0] = ' RAND (%s Bytes) : ' % str(RAND_len) + '%s' % RAND + '\n' + \
+                                  ' AUTN (%s Bytes) : ' % str(AUTN_len) + '%s' % AUTN
             else:
                 sum_read.append(['', ''])
             if debug_mode: print('sum_remote     :', sum_remote)
