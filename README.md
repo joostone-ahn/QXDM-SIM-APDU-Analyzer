@@ -17,4 +17,4 @@ This tool helps you to overcome the above limits.
 
 ※ text file(.txt) in 'file_sample' directory, which is filtered with 'UIM APDU [0x19B7]' from QCAT logs
 
-![image](https://user-images.githubusercontent.com/98713651/179559928-b1a12a58-093c-4e41-b627-6bfc3adefb2c.png)
+![image](https://user-images.githubusercontent.com/98713651/179560159-1ca611e3-a7b5-42a1-8c2d-96785a8c4325.png)
