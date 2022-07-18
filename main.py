@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import pyqtSlot
 from PyQt5 import QtGui
+from PyQt5.QtCore import pyqtSignal, pyqtSlot
 import msg_item
 import port
 import msg_sum
@@ -86,56 +86,60 @@ class Basic_GUI(QWidget):
         self.SUM_label = QLabel()
         self.SUM_label.setText("Summary")
         self.SUM_label.setFont(CourierNewFont)
-        self.SUM_list = QListWidget()
+        self.SUM_list = MyQListWidget()
         self.SUM_list.setAutoScroll(True)
-        self.SUM_list.setFixedHeight(500)
-        self.SUM_list.setFixedWidth(630)
+        self.SUM_list.setFixedWidth(600)
+        self.SUM_list.setFixedHeight(400)
         self.SUM_list.setFont(CourierNewFont)
+        self.SUM_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
         SUM_vbox = QVBoxLayout()
         SUM_vbox.addWidget(self.SUM_label)
         SUM_vbox.addWidget(self.SUM_list)
 
-        self.SUM_list.itemClicked.connect(self.clicked_rst)
-        self.SUM_list.itemSelectionChanged.connect(self.clicked_rst)
-
-        self.App_label = QLabel()
-        self.App_label.setText("Application-Level Analysis")
-        self.App_label.setFont(CourierNewFont)
-        self.App_list = QTextBrowser()
-        self.App_list.setFixedHeight(500)
-        self.App_list.setFont(CourierNewFont)
-        App_vbox = QVBoxLayout()
-        App_vbox.addWidget(self.App_label)
-        App_vbox.addWidget(self.App_list)
-
-        hbox3 = QHBoxLayout()
-        hbox3.addLayout(SUM_vbox)
-        hbox3.addLayout(App_vbox)
-        # hbox3.addStretch()
-
-        self.SIM_Info_label = QLabel()
-        self.SIM_Info_label.setText("SIM information and OTA updated")
-        self.SIM_Info_label.setFont(CourierNewFont)
-        self.SIM_Info_list = QTextBrowser()
-        self.SIM_Info_list.setFixedWidth(630)
-        self.SIM_Info_list.setFont(CourierNewFont)
-        SUM_File_vbox = QVBoxLayout()
-        SUM_File_vbox.addWidget(self.SIM_Info_label)
-        SUM_File_vbox.addWidget(self.SIM_Info_list)
+        self.SUM_list.selection_changed.connect(self.clicked_rst)
 
         self.Prot_label = QLabel()
         self.Prot_label.setText("Protocol-Level Analysis")
         self.Prot_label.setFont(CourierNewFont)
         self.Prot_list = QTextBrowser()
+        self.Prot_list.setFixedWidth(600)
+        self.Prot_list.setFixedHeight(400)
         self.Prot_list.setFont(CourierNewFont)
         Prot_vbox = QVBoxLayout()
         Prot_vbox.addWidget(self.Prot_label)
         Prot_vbox.addWidget(self.Prot_list)
 
+        hbox3 = QHBoxLayout()
+        hbox3.addLayout(SUM_vbox)
+        hbox3.addLayout(Prot_vbox)
+        hbox3.addStretch()
+
+        self.SIM_Info_label = QLabel()
+        self.SIM_Info_label.setText("SIM information and OTA updated")
+        self.SIM_Info_label.setFont(CourierNewFont)
+        self.SIM_Info_list = QTextBrowser()
+        self.SIM_Info_list.setFixedWidth(600)
+        self.SIM_Info_list.setFixedHeight(400)
+        self.SIM_Info_list.setFont(CourierNewFont)
+        SUM_File_vbox = QVBoxLayout()
+        SUM_File_vbox.addWidget(self.SIM_Info_label)
+        SUM_File_vbox.addWidget(self.SIM_Info_list)
+
+        self.App_label = QLabel()
+        self.App_label.setText("Application-Level Analysis")
+        self.App_label.setFont(CourierNewFont)
+        self.App_list = QTextBrowser()
+        self.App_list.setFont(CourierNewFont)
+        self.App_list.setFixedWidth(600)
+        self.App_list.setFixedHeight(400)
+        App_vbox = QVBoxLayout()
+        App_vbox.addWidget(self.App_label)
+        App_vbox.addWidget(self.App_list)
+
         hbox4 = QHBoxLayout()
         hbox4.addLayout(SUM_File_vbox)
-        hbox4.addLayout(Prot_vbox)
-        # hbox4.addStretch()
+        hbox4.addLayout(App_vbox)
+        hbox4.addStretch()
 
         vbox = QVBoxLayout()
         vbox.addLayout(hbox1)
@@ -144,12 +148,16 @@ class Basic_GUI(QWidget):
         vbox.addLayout(hbox3)
         vbox.addWidget(QLabel())
         vbox.addLayout(hbox4)
+        vbox.addStretch()
         vbox.addWidget(QLabel())
         vbox.addWidget(QLabel("Copyright 2022. JUSEOK AHN<ajs3013@lguplus.co.kr> all rights reserved."))
 
         self.setLayout(vbox)
-        self.setWindowTitle('Dual SIM APDU Analyzer v1.2')
-        self.showMaximized()
+        self.setWindowTitle('Dual SIM APDU Analyzer v1.3')
+        # self.showMaximized()
+        self.setGeometry(110, 50, 0, 0)
+        self.show()
+
 
     @pyqtSlot()
     def comb_changed(self):
@@ -292,7 +300,7 @@ class Basic_GUI(QWidget):
             print()
 
         sum_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data
-        self.sum_rst, self.sum_log_ch, self.sum_log_ch_id, self.sum_read, self.sum_error, self.sum_remote \
+        self.sum_rst, self.sum_log_ch, self.sum_log_ch_id, self.sum_cmd, self.sum_read, self.sum_error, self.sum_remote \
             = msg_sum.rst(sum_input, self.load_type)
         for n in self.sum_rst:
             self.SUM_list.addItem(n)
@@ -304,14 +312,14 @@ class Basic_GUI(QWidget):
                 else: n[0] = n[0].split(' ')[1] + ' ' + n[0].split(' ')[0]
             if len(n)==2:
                 if n[0] in ['ICCID', 'IMSI', 'MSISDN', 'IMPI'] :
-                    sum_remote_show += '-' * 85 + '\n'
+                    sum_remote_show += '-' * 80 + '\n'
                     sum_remote_show += '%10s' % n[0] + '   ' + n[1].replace('   ', ' ') + '\n'
             if len(n)>2:
-                sum_remote_show += '-' * 85 + '\n'
+                sum_remote_show += '-' * 80 + '\n'
                 sum_remote_show += '%10s' % n[0] + '   ' + n[1].replace('   ', ' ') + '\n'
                 sum_remote_show += '%10s' % ">>>" + '   ' + n[2].replace('   ', ' ') + '\n'
         if sum_remote_show:
-            sum_remote_show += '-' * 85
+            sum_remote_show += '-' * 80
             self.SIM_Info_list.setText(sum_remote_show)
 
         if debug_mode :
@@ -319,6 +327,7 @@ class Basic_GUI(QWidget):
             print('sum_rst       :', len(self.sum_rst), self.sum_rst)
             print('sum_log_ch    :', len(self.sum_log_ch), self.sum_log_ch)
             print('sum_log_ch_id :', len(self.sum_log_ch_id), self.sum_log_ch_id)
+            print('sum_cmd       :', len(self.sum_cmd), self.sum_cmd)
             print('sum_read      :', len(self.sum_read), self.sum_read)
             print('sum_error     :', len(self.sum_error), self.sum_error)
             print('sum_remote    :', len(self.sum_remote), self.sum_remote)
@@ -328,25 +337,30 @@ class Basic_GUI(QWidget):
 
     @pyqtSlot()
     def clicked_rst(self):
-        self.App_list.clear()
-        self.Prot_list.clear()
+        if self.SUM_list.selected_items != set():
+            selected_list = sorted(list(self.SUM_list.selected_items))
+            # print(selected_list)
+            # item_num = self.SUM_list.currentRow()
 
-        item_num = self.SUM_list.currentRow()
+            prot_rst_show = ''
+            for item_num in selected_list:
+                prot_rst_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data
+                prot_rst = msg_prot.rst(prot_rst_input, item_num, self.load_type)
+                if prot_rst: prot_rst_show += '=' * 80 + '\n'
+                for n in prot_rst:
+                    prot_rst_show += n +'\n'
+            if prot_rst and len(selected_list)>0: prot_rst_show += '=' * 80
+            self.Prot_list.setPlainText(prot_rst_show)
 
-        prot_rst_input = self.msg_all, self.prot_start, self.prot_type, self.prot_data
-        prot_rst = msg_prot.rst(prot_rst_input, item_num, self.load_type)
-        prot_rst_show = ''
-        for n in prot_rst:
-            prot_rst_show +=n +'\n'
-        self.Prot_list.setPlainText(prot_rst_show)
-
-        app_rst_input1 = self.msg_all, self.prot_start, self.prot_end
-        app_rst_input2 = self.prot_type, self.sum_log_ch, self.sum_log_ch_id
-        app_rst = msg_app.rst(app_rst_input1, app_rst_input2, self.sum_read, self.sum_error, item_num, self.load_type)
-        app_rst_show = ''
-        for n in app_rst:
-            app_rst_show +=n +'\n'
-        self.App_list.setPlainText(app_rst_show)
+            app_rst_show = ''
+            for item_num in selected_list:
+                app_rst_input = self.prot_type, self.sum_cmd, self.sum_log_ch, self.sum_log_ch_id
+                app_rst = msg_app.rst(app_rst_input, self.sum_read, self.sum_error, item_num)
+                if app_rst: app_rst_show += '=' * 80 + '\n'
+                for n in app_rst:
+                    app_rst_show +=n +'\n'
+            if app_rst and len(selected_list)>0: app_rst_show += '=' * 80
+            self.App_list.setPlainText(app_rst_show)
 
     # @pyqtSlot()
     # def save_msg(self):
@@ -370,6 +384,28 @@ class Basic_GUI(QWidget):
     #     self.saved_label.setText(save_path[0])
     #     self.save_btn.setDisabled(True)
 
+class MyQListWidget(QListWidget):
+
+    selection_changed = pyqtSignal(object)
+
+    def __init__(self):
+        QListWidget.__init__(self)
+        self.selected_items = set()
+        self.itemSelectionChanged.connect(self.sth_changed)
+
+    def sth_changed(self):
+        newly_selected_items = set([n.row() for n in self.selectedIndexes()])
+        if newly_selected_items != self.selected_items:
+            self.selected_items = newly_selected_items
+        self.selection_changed.emit(self)
+
+    def mousePressEvent(self, event):
+        QListWidget.mousePressEvent(self, event)
+        self.sth_changed()
+
+    def mouseReleaseEvent(self, event):
+        QListWidget.mouseReleaseEvent(self, event)
+        self.sth_changed()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

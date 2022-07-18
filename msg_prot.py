@@ -91,8 +91,12 @@ def rst(input, item_num, load_type):
 
     prot_rst = []
     if data[0]:
-        prot_rst.append('-' * 150)
         for n in range(len(data)):
+            if n ==0:
+                rst_ind = '[%s]' % str(item_num + 1)
+            else:
+                rst_ind = ' '*len(rst_ind)
+
             if load_type == 'File':
                 rst_time = msg_all[start[n]].split('  ')[1].split('  [')[0]
             elif load_type == 'Paste':
@@ -103,16 +107,16 @@ def rst(input, item_num, load_type):
             rst_data = ''
             cnt = 0
             for m in range(len(list(data[n]))):
+                if m%32 == 0 and m//32 > 0:
+                    rst_data += '\n' + ' '*(len(rst_ind)+len(rst_time)+len(rst_type)+5)
                 if m%2 ==0 :
                     rst_data += list(data[n])[m]
                     cnt +=1
                 else:
                     rst_data += list(data[n])[m] + ' '
                     cnt +=2
-                    if cnt%(150-5-len(rst_time)-len(rst_type)) == 0:
-                        rst_data += '\n' + ' '*(len(rst_time)+len(rst_type)+4)
-            prot_rst.append(rst_time + '  ' + rst_type + '  ' + rst_data)
-            prot_rst.append('-' * 150)
+            prot_rst.append(rst_ind + ' ' + rst_time + '  ' + rst_type + '  ' + rst_data)
+            if n!= len(data)-1: prot_rst.append(' '*(len(rst_ind)+1) + '-' *(80-len(rst_ind)-1))
             if debug_mode:
                 print('rst_time :', rst_time)
                 print('rst_type :', rst_type)

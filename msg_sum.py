@@ -8,7 +8,7 @@ debug_mode = 0
 
 def rst(input, load_type):
     msg_all, prot_start, prot_type, prot_data = input
-    sum_rst, sum_log_ch, sum_log_ch_id, sum_read, sum_error = [], [], [], [], []
+    sum_rst, sum_log_ch, sum_log_ch_id, sum_cmd, sum_read, sum_error = [], [], [], [], [], []
     sum_remote, sum_remote_list = READ.init()
     log_ch = [['','']] # log_ch[n] = [current DF, current EF]
 
@@ -31,6 +31,7 @@ def rst(input, load_type):
             sum_rst.append(num + '  ' + time + '  ' + type)
             sum_log_ch.append(['','']) # sum_log_ch[n] = [current DF, current EF]
             sum_log_ch_id.append('')
+            sum_cmd.append('')
             sum_read.append(['','']) # sum_read[n] = [file_name, file_data]
             sum_error.append('')
         else: # sum_type == 'TX'
@@ -131,6 +132,7 @@ def rst(input, load_type):
             # sum_rst
             if sw != '9000' and sw[:2] != '91' and ins[0] != '2': cmd += ' (X)'
             sum_rst.append(num + '  ' + time + '  ' +'%-42s'%cmd)
+            sum_cmd.append(cmd)
             if file_name: sum_rst[-1] += file_name
             if debug_mode: print('sum_rst        :', sum_rst[-1])
 
@@ -142,13 +144,15 @@ def rst(input, load_type):
                     sum_read, sum_remote \
                         = READ.process(ins, file_name, prot_data[m], sum_read, sum_remote, sum_remote_list)
                 else:
-                    sum_read.append(['', ''])
+                    sum_read.append(['',''])
             elif ins == '88' or ins == '89':
-                sum_read.append([''])
-                sum_read[-1][0] = ' RAND (%s Bytes) : ' % str(RAND_len) + '%s' % RAND + '\n' + \
-                                  ' AUTN (%s Bytes) : ' % str(AUTN_len) + '%s' % AUTN
+                sum_read.append([list()])
+                sum_read[-1][0].append(' RAND (%s Bytes) : ' % str(RAND_len) + '%s' % RAND)
+                sum_read[-1][0].append(' AUTN (%s Bytes) : ' % str(AUTN_len) + '%s' % AUTN)
+                # print(sum_read[-1])
             else:
-                sum_read.append(['', ''])
+                sum_read.append(['',''])
+
             if debug_mode: print('sum_remote     :', sum_remote)
             if debug_mode: print('sum_read       :', sum_read[-1])
 
@@ -164,5 +168,5 @@ def rst(input, load_type):
 
         if debug_mode: print()
 
-    return sum_rst, sum_log_ch, sum_log_ch_id, sum_read, sum_error, sum_remote
+    return sum_rst, sum_log_ch, sum_log_ch_id, sum_cmd, sum_read, sum_error, sum_remote
 
