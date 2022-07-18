@@ -102,7 +102,7 @@ def parser(file_name, data, offset):
             cnt = 0
             for n in PLMNwAcT:
                 cnt += 1
-                if parsing != '': parsing += '\n' + ' '*len(' Read Parsing    : ')
+                if parsing != '': parsing += '\n'
                 MCC = n[:-4][1] + n[:-4][0] + n[:-4][3]
                 MNC = n[:-4][5] + n[:-4][4] + n[:-4][2]
                 # if 'F' in MNC: MNC = MNC.replace('F',' ')
@@ -121,7 +121,7 @@ def parser(file_name, data, offset):
             cnt = 0
             for n in FPLMN:
                 cnt += 1
-                if parsing != '': parsing += '\n' + ' '*len(' Read Parsing    : ')
+                if parsing != '': parsing += '\n'
                 MCC = n[1] + n[0] + n[3]
                 MNC = n[5] + n[4] + n[2]
                 # if 'F' in MNC: MNC = MNC.replace('F',' ')

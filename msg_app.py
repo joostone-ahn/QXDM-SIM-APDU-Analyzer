@@ -43,7 +43,11 @@ def rst(input, read, error, item_num):
                 split_rst = split_func(read[item_num][0][0], len(rst_ind))
                 app_rst.append(' '*len(rst_ind)+' Record Contents : %s'%split_rst)
                 if len(read[item_num][0])>1:
-                    app_rst.append(' '*len(rst_ind)+' Record Parsing  : %s'%read[item_num][0][1])
+                    if '\n' in read[item_num][0][1]:
+                        app_rst.append(' ' * len(rst_ind)+' Read Parsing    : '+read[item_num][0][1].split('\n')[0])
+                        for n in read[item_num][0][1].split('\n')[1:]:
+                            app_rst.append(' ' * len(rst_ind) + ' '*len(' Read Parsing    : ')+n)
+                    else: app_rst.append(' '*len(rst_ind)+' Record Parsing  : %s'%read[item_num][0][1])
             elif len(read[item_num]) == 2: # READ BINARY
                 app_rst.append(' '*len(rst_ind)+' Read Offset     : 0x%s'%read[item_num][1][0])
                 app_rst.append(' '*len(rst_ind)+' Read Length     : 0x%s'%read[item_num][1][1])
@@ -51,7 +55,11 @@ def rst(input, read, error, item_num):
                 split_rst = split_func(read[item_num][0][0], len(rst_ind))
                 app_rst.append(' '*len(rst_ind)+' Read Contents   : %s'%split_rst)
                 if len(read[item_num][0])>1:
-                    app_rst.append(' '*len(rst_ind)+' Read Parsing    : %s'%read[item_num][0][1])
+                    if '\n' in read[item_num][0][1]:
+                        app_rst.append(' ' * len(rst_ind)+' Read Parsing    : '+read[item_num][0][1].split('\n')[0])
+                        for n in read[item_num][0][1].split('\n')[1:]:
+                            app_rst.append(' ' * len(rst_ind) + ' '*len(' Read Parsing    : ')+n)
+                    else: app_rst.append(' '*len(rst_ind)+' Read Parsing    : %s'%read[item_num][0][1])
             elif len(read[item_num]) == 1: # ETC (AUTHENTICATE, ...)
                 for n in read[item_num][0]:
                     app_rst.append(' '*len(rst_ind)+n)
