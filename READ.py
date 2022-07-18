@@ -3,13 +3,16 @@ debug_mode = 0
 def process(ins, file_name, data, sum_read, sum_remote, sum_remote_list):
 
     file_name = file_name.replace('[', '').replace(']', '')
-    file_data = ''
-    file_data_lines = len(data[1][2:-4])//130+1
-    for n in range(file_data_lines):
-        if n > 0: file_data += ' '*len(' Read Contents   : ')
-        file_data += data[1][2:-4][n*130:(n+1)*130]
-        if file_data_lines > 1 and n!= file_data_lines-1 : file_data += '\n'
-    sum_read.append([[file_data]])  # sum_read[n][0] = [file_data]
+    sum_read.append([[data[1][2:-4]]])  # sum_read[n][0] = [file_data]
+
+    # file_data = ''
+    # file_data_lines = len(data[1][2:-4])//130+1
+    # for n in range(file_data_lines):
+    #     if n > 0: file_data += ' '*len(' Read Contents   : ')
+    #     file_data += data[1][2:-4][n*130:(n+1)*130]
+    #     if file_data_lines > 1 and n!= file_data_lines-1 : file_data += '\n'
+    # sum_read.append([[file_data]])  # sum_read[n][0] = [file_data]
+
 
     if ins == 'B0':
         P2 = data[0][6:8].zfill(2)
