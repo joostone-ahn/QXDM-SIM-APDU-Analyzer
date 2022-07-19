@@ -4,7 +4,7 @@ import READ
 import Proactive
 import file_system
 import short_file_id
-debug_mode = 0
+debug_mode = 1
 
 def rst(input, load_type):
     msg_all, prot_start, prot_type, prot_data = input
@@ -81,6 +81,7 @@ def rst(input, load_type):
                     #     file_name, error = file_system.process(log_ch[log_ch_id][0], log_ch[log_ch_id][1], last_file_id)
                 elif ins == '88' or ins == '89': # AUTHENTICATE
                     if debug_mode: print('AUTH check     :',prot_data[m])
+                    print(log_ch[log_ch_id][0])
                     file_name, error = file_system.process(log_ch[log_ch_id][0], '', last_file_id)
                     cmd += ' (%s)'%file_name.split(' ')[1].replace(']','')
                     file_name = ''
