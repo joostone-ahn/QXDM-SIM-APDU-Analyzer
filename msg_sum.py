@@ -4,7 +4,7 @@ import READ
 import Proactive
 import file_system
 import short_file_id
-debug_mode = 1
+debug_mode = 0
 
 def rst(input, load_type):
     msg_all, prot_start, prot_type, prot_data = input
