@@ -44,10 +44,17 @@ def process(log_ch, log_ch_id, SFI):
     error = ''
     current_DF = log_ch[log_ch_id][0]
 
+    if current_DF[:16] in SFI_file_id: current_DF = current_DF[:16]
     if current_DF in SFI_file_id:
-        file_id = SFI_file_id[current_DF][SFI]
-        file_name, error = file_system.process(log_ch[log_ch_id][0], file_id, file_id)
-        log_ch[log_ch_id][1] = file_id
+        if SFI in SFI_file_id[current_DF]:
+            file_id = SFI_file_id[current_DF][SFI]
+            file_name, error = file_system.process(log_ch[log_ch_id][0], file_id, file_id)
+            log_ch[log_ch_id][1] = file_id
+        else:
+            file_name = "[Unknown]"
+            file_id = "0x%s(SFI)" % SFI + ' [Unknown]'
+            log_ch[log_ch_id][1] = file_id
+            error = '*Non-standard'
     else:
         file_name = "[Unknown]"
         file_id = "0x%s(SFI)"%SFI + ' [Unknown]'
@@ -67,7 +74,7 @@ def process(log_ch, log_ch_id, SFI):
 
 
 SFI_file_id = {
-    'A0000000871002FFFFFFFF8907090000': {
+    'A0000000871002FF': {
         '01': '6FB7',
         '02': '6F05',
         '03': '6FAD',
@@ -98,71 +105,7 @@ SFI_file_id = {
         '1D': '6FD9',
         '1E': '6FE3',
         '18': '6FE4'
-    }, # Ubigi
-    'A0000000871002FF82FFFF89010000FF': {
-        '01': '6FB7',
-        '02': '6F05',
-        '03': '6FAD',
-        '04': '6F38',
-        '05': '6F56',
-        '06': '6F78',
-        '07': '6F07',
-        '08': '6F08',
-        '09': '6F09',
-        '0A': '6F60',
-        '0B': '6F7E',
-        '0C': '6F73',
-        '0D': '6F7B',
-        '0E': '6F48',
-        '0F': '6F5B',
-        '10': '6F5C',
-        '11': '6F61',
-        '12': '6F31',
-        '13': '6F62',
-        '14': '6F80',
-        '15': '6F81',
-        '16': '6F4F',
-        '17': '6F06',
-        '19': '6FC5',
-        '1A': '6FC6',
-        '1B': '6FCD',
-        '1C': '6F39',
-        '1D': '6FD9',
-        '1E': '6FE3',
-        '18': '6FE4'
-    }, #L
-    'A0000000871002FFFFFFFF89040300FF': {
-        '01': '6FB7',
-        '02': '6F05',
-        '03': '6FAD',
-        '04': '6F38',
-        '05': '6F56',
-        '06': '6F78',
-        '07': '6F07',
-        '08': '6F08',
-        '09': '6F09',
-        '0A': '6F60',
-        '0B': '6F7E',
-        '0C': '6F73',
-        '0D': '6F7B',
-        '0E': '6F48',
-        '0F': '6F5B',
-        '10': '6F5C',
-        '11': '6F61',
-        '12': '6F31',
-        '13': '6F62',
-        '14': '6F80',
-        '15': '6F81',
-        '16': '6F4F',
-        '17': '6F06',
-        '19': '6FC5',
-        '1A': '6FC6',
-        '1B': '6FCD',
-        '1C': '6F39',
-        '1D': '6FD9',
-        '1E': '6FE3',
-        '18': '6FE4'
-    }, #S
+    },
     '7FFF5F3B': {
         '01': '4F20',
         '02': '4F52'
@@ -231,22 +174,14 @@ SFI_file_id = {
         '0B': '4F0B',
         '0C': '4F0C'
     },
-    'A0000000871004FF82FFFF89010000FF': {
+    'A0000000871004FF': {
         '02': '6F02',
         '05': '6F03',
         '04': '6F04',
         '03': '6FAD',
         '06': '6F06',
         '07': '6F07'
-    }, #L
-    'A0000000871004FF82FFFF89040300FF': {
-        '02': '6F02',
-        '05': '6F03',
-        '04': '6F04',
-        '03': '6FAD',
-        '06': '6F06',
-        '07': '6F07'
-    }, #S
+    },
     '7F105F3A': {
         '01': '4F3A', # ADN
         '02': '4F09', # PBC

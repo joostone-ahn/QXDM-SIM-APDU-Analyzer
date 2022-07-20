@@ -2,6 +2,8 @@ debug_mode = 0
 
 def process(current_DF, current_EF, file_id):
     error = ''
+    if current_DF[:16] in DF_name: current_DF = current_DF[:16]
+
     if current_EF:
         if current_DF:
             if current_DF in DF_name:
@@ -32,6 +34,7 @@ def process(current_DF, current_EF, file_id):
             error = 'AID not decided'
     if debug_mode: print(current_DF, current_EF, file_name, error)
     if file_name: file_name = '[%s]'%file_name
+
     return file_name, error
 
 
@@ -59,9 +62,7 @@ DF_name['7F105F3A'] = 'DF PHONEBOOK'
 DF_name['7F105F3B'] = 'DF MULTIMEDIA'
 DF_name['7F105F3D'] = 'DF MCS'
 DF_name['7F105F3E'] = 'DF V2X'
-DF_name['A0000000871002FF82FFFF89010000FF'] = 'ADF USIM' #L
-DF_name['A0000000871002FFFFFFFF89040300FF'] = 'ADF USIM' #S
-DF_name['A0000000871002FFFFFFFF8907090000'] = 'ADF USIM' #Ubigi
+DF_name['A0000000871002FF'] = 'ADF USIM'
 DF_name['7FFF5F3A'] = 'DF PHONEBOOK'
 DF_name['7FFF5F3B'] = 'DF GSM-ACCESS'
 DF_name['7FFF5F3C'] = 'DF MexE'
@@ -74,9 +75,7 @@ DF_name['7FFF5FB0'] = 'DF TV'
 DF_name['7FFF5FC0'] = 'DF 5GS'
 
 # 3GPP ts31.103 Release16
-DF_name['A0000000871004FF82FFFF89010000FF'] = 'ADF ISIM' #L
-DF_name['A0000000871004FF82FFFF89040300FF'] = 'ADF ISIM' #S
-
+DF_name['A0000000871004FF'] = 'ADF ISIM'
 DF_name['A0000003431002FF82FFFF89010000FF'] = 'ADF CSIM' #L
 
 # 3GPP ts31.102 Release16
@@ -154,7 +153,7 @@ EF_name ={
         '4F01': 'VST',
         '4F02': 'V2X_CONFIG'
     },
-    'A0000000871002FFFFFFFF8907090000': {
+    'A0000000871002FF': {
         '6F05': 'LI',
         '6F06': 'ARR',
         '6F07': 'IMSI',
@@ -264,230 +263,7 @@ EF_name ={
         '6FFC': 'XCAPConfigData',
         '6FFD': 'EARFCNList',
         '6FFE': 'MuDMiDConfigData'
-    },  # Ubigi
-    'A0000000871002FF82FFFF89010000FF': {
-        '6F05': 'LI',
-        '6F06': 'ARR',
-        '6F07': 'IMSI',
-        '6F08': 'Keys',
-        '6F09': 'KeysPS',
-        '6F2C': 'DCK',
-        '6F31': 'HPPLMN',
-        '6F32': 'CNL',
-        '6F37': 'ACMmax',
-        '6F38': 'UST',
-        '6F39': 'ACM',
-        '6F3B': 'FDN',
-        '6F3C': 'SMS',
-        '6F3E': 'GID1',
-        '6F3F': 'GID2',
-        '6F40': 'MSISDN',
-        '6F41': 'PUCT',
-        '6F42': 'SMSP',
-        '6F43': 'SMSS',
-        '6F45': 'CBMI',
-        '6F46': 'SPN',
-        '6F47': 'SMSR',
-        '6F48': 'CBMID',
-        '6F49': 'SDN',
-        '6F4B': 'EXT2',
-        '6F4C': 'EXT3',
-        '6F4D': 'BDN',
-        '6F4E': 'EXT5',
-        '6F4F': 'CCP2',
-        '6F50': 'CBMIR',
-        '6F55': 'EXT4',
-        '6F56': 'EST',
-        '6F57': 'ACL',
-        '6F58': 'CMI',
-        '6F5B': 'START-HFN',
-        '6F5C': 'THRESHOLD',
-        '6F60': 'PLMNwAcT',
-        '6F61': 'OPLMNwAcT',
-        '6F62': 'HPLMNwAcT',
-        '6F73': 'PSLOCI',
-        '6F78': 'ACC',
-        '6F7B': 'FPLMN',
-        '6F7E': 'LOCI',
-        '6F80': 'ICI',
-        '6F81': 'OCI',
-        '6F82': 'ICT',
-        '6F83': 'OCT',
-        '6FAD': 'AD',
-        '6FB1': 'VGCS',
-        '6FB2': 'VGCSS',
-        '6FB3': 'VBS',
-        '6FB4': 'VBSS',
-        '6FB5': 'eMLPP',
-        '6FB6': 'AaeM',
-        '6FB7': 'ECC',
-        '6FC3': 'Hiddenkey',
-        '6FC4': 'NETPAR',
-        '6FC5': 'PNN',
-        '6FC6': 'OPL',
-        '6FC7': 'MBDN',
-        '6FC8': 'EXT6',
-        '6FC9': 'MBI',
-        '6FCA': 'MWIS',
-        '6FCB': 'CFIS',
-        '6FCC': 'EXT7',
-        '6FCD': 'SPDI',
-        '6FCE': 'MMSN',
-        '6FCF': 'EXT8',
-        '6FD0': 'MMSICP',
-        '6FD1': 'MMSUP',
-        '6FD2': 'MMSUCP',
-        '6FD3': 'NIA',
-        '6FD4': 'VGCSCA',
-        '6FD5': 'VBSCA',
-        '6FD6': 'GBAP',
-        '6FD7': 'MSK',
-        '6FD8': 'MUK',
-        '6FD9': 'EHPLMN',
-        '6FDA': 'GBANL',
-        '6FDB': 'EHPLMNPI',
-        '6FDC': 'LRPLMNSI',
-        '6FDD': 'NAFKCA',
-        '6FDE': 'SPNI',
-        '6FDF': 'PNNI',
-        '6FE2': 'NCP-IP',
-        '6FE3': 'EPSLOCI',
-        '6FE4': 'EPSNSC',
-        '6FE6': 'UFC',
-        '6FE7': 'UICCIARI',
-        '6FE8': 'NASCONFIG',
-        '6FEC': 'PWS',
-        '6FED': 'FDNURI',
-        '6FEE': 'BDNURI',
-        '6FEF': 'SDNURI',
-        '6FF0': 'IWL',
-        '6FF1': 'IPS',
-        '6FF2': 'IPD',
-        '6FF3': 'ePDGId',
-        '6FF4': 'ePDGSelection',
-        '6FF5': 'ePDGIdEm',
-        '6FF6': 'ePDGSelectionEm',
-        '6FF7': 'FromPreferred',
-        '6FF8': 'IMSConfigData',
-        '6FF9': '3GPPPSDATAOFF',
-        '6FFA': '3GPPPSDATAOFFservicelist',
-        '6FFB': 'TVCONFIG',
-        '6FFC': 'XCAPConfigData',
-        '6FFD': 'EARFCNList',
-        '6FFE': 'MuDMiDConfigData'
-    }, #L
-    'A0000000871002FFFFFFFF89040300FF': {
-        '6F65': 'RPLMNAcT', # 31.102 release13
-        '6F05': 'LI',
-        '6F06': 'ARR',
-        '6F07': 'IMSI',
-        '6F08': 'Keys',
-        '6F09': 'KeysPS',
-        '6F2C': 'DCK',
-        '6F31': 'HPPLMN',
-        '6F32': 'CNL',
-        '6F37': 'ACMmax',
-        '6F38': 'UST',
-        '6F39': 'ACM',
-        '6F3B': 'FDN',
-        '6F3C': 'SMS',
-        '6F3E': 'GID1',
-        '6F3F': 'GID2',
-        '6F40': 'MSISDN',
-        '6F41': 'PUCT',
-        '6F42': 'SMSP',
-        '6F43': 'SMSS',
-        '6F45': 'CBMI',
-        '6F46': 'SPN',
-        '6F47': 'SMSR',
-        '6F48': 'CBMID',
-        '6F49': 'SDN',
-        '6F4B': 'EXT2',
-        '6F4C': 'EXT3',
-        '6F4D': 'BDN',
-        '6F4E': 'EXT5',
-        '6F4F': 'CCP2',
-        '6F50': 'CBMIR',
-        '6F55': 'EXT4',
-        '6F56': 'EST',
-        '6F57': 'ACL',
-        '6F58': 'CMI',
-        '6F5B': 'START-HFN',
-        '6F5C': 'THRESHOLD',
-        '6F60': 'PLMNwAcT',
-        '6F61': 'OPLMNwAcT',
-        '6F62': 'HPLMNwAcT',
-        '6F73': 'PSLOCI',
-        '6F78': 'ACC',
-        '6F7B': 'FPLMN',
-        '6F7E': 'LOCI',
-        '6F80': 'ICI',
-        '6F81': 'OCI',
-        '6F82': 'ICT',
-        '6F83': 'OCT',
-        '6FAD': 'AD',
-        '6FB1': 'VGCS',
-        '6FB2': 'VGCSS',
-        '6FB3': 'VBS',
-        '6FB4': 'VBSS',
-        '6FB5': 'eMLPP',
-        '6FB6': 'AaeM',
-        '6FB7': 'ECC',
-        '6FC3': 'Hiddenkey',
-        '6FC4': 'NETPAR',
-        '6FC5': 'PNN',
-        '6FC6': 'OPL',
-        '6FC7': 'MBDN',
-        '6FC8': 'EXT6',
-        '6FC9': 'MBI',
-        '6FCA': 'MWIS',
-        '6FCB': 'CFIS',
-        '6FCC': 'EXT7',
-        '6FCD': 'SPDI',
-        '6FCE': 'MMSN',
-        '6FCF': 'EXT8',
-        '6FD0': 'MMSICP',
-        '6FD1': 'MMSUP',
-        '6FD2': 'MMSUCP',
-        '6FD3': 'NIA',
-        '6FD4': 'VGCSCA',
-        '6FD5': 'VBSCA',
-        '6FD6': 'GBAP',
-        '6FD7': 'MSK',
-        '6FD8': 'MUK',
-        '6FD9': 'EHPLMN',
-        '6FDA': 'GBANL',
-        '6FDB': 'EHPLMNPI',
-        '6FDC': 'LRPLMNSI',
-        '6FDD': 'NAFKCA',
-        '6FDE': 'SPNI',
-        '6FDF': 'PNNI',
-        '6FE2': 'NCP-IP',
-        '6FE3': 'EPSLOCI',
-        '6FE4': 'EPSNSC',
-        '6FE6': 'UFC',
-        '6FE7': 'UICCIARI',
-        '6FE8': 'NASCONFIG',
-        '6FEC': 'PWS',
-        '6FED': 'FDNURI',
-        '6FEE': 'BDNURI',
-        '6FEF': 'SDNURI',
-        '6FF0': 'IWL',
-        '6FF1': 'IPS',
-        '6FF2': 'IPD',
-        '6FF3': 'ePDGId',
-        '6FF4': 'ePDGSelection',
-        '6FF5': 'ePDGIdEm',
-        '6FF6': 'ePDGSelectionEm',
-        '6FF7': 'FromPreferred',
-        '6FF8': 'IMSConfigData',
-        '6FF9': '3GPPPSDATAOFF',
-        '6FFA': '3GPPPSDATAOFFservicelist',
-        '6FFB': 'TVCONFIG',
-        '6FFC': 'XCAPConfigData',
-        '6FFD': 'EARFCNList',
-        '6FFE': 'MuDMiDConfigData'
-    }, #S
+    },
     '7FFF5F3A': {
         '4F09': 'PBC',
         '4F11': 'ANRA',
@@ -594,7 +370,7 @@ EF_name ={
         '4F0B': 'URSP',
         '4F0C': 'TN3GPPSNN'
     },
-    'A0000000871004FF82FFFF89010000FF': {
+    'A0000000871004FF': {
         '6F07': 'IST',
         '6F02': 'IMPI',
         '6F03': 'DOMAIN',
@@ -614,36 +390,15 @@ EF_name ={
         '6FF8': 'IMSConfigData',
         '6FFC': 'XCAPConfigData',
         '6FFA': 'WebRTCURI'
-    },#L
-    'A0000000871004FF82FFFF89040300FF': {
-        '6F07': 'IST',
-        '6F02': 'IMPI',
-        '6F03': 'DOMAIN',
-        '6F04': 'IMPU',
-        '6FAD': 'AD',
-        '6F06': 'ARR',
-        '6F09': 'P-CSCF',
-        '6FD5': 'GBABP',
-        '6FD7': 'GBANL',
-        '6FDD': 'NAFKCA',
-        '6FE7': 'UICCIARI',
-        '6F3C': 'SMS',
-        '6F43': 'SMSS',
-        '6F47': 'SMSR',
-        '6F42': 'SMSP',
-        '6FF7': 'FromPreferred',
-        '6FF8': 'IMSConfigData',
-        '6FFC': 'XCAPConfigData',
-        '6FFA': 'WebRTCURI'
-    } #S
+    }
 }
 
 USIM_EF_list = []
-for n in EF_name['A0000000871002FF82FFFF89010000FF'].keys():
+for n in EF_name['A0000000871002FF'].keys():
     USIM_EF_list.append(n)
 
 ISIM_EF_list = []
-for n in EF_name['A0000000871004FF82FFFF89010000FF'].keys():
+for n in EF_name['A0000000871004FF'].keys():
     ISIM_EF_list.append(n)
 
 # print(DF_name)

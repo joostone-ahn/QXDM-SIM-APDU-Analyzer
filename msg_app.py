@@ -1,5 +1,5 @@
 import file_system
-debug_mode = 0
+debug_mode = 1
 
 def rst(input, read, error, item_num):
     prot_type, sum_cmd, sum_log_ch, sum_log_ch_id = input
@@ -9,6 +9,9 @@ def rst(input, read, error, item_num):
     cmd = sum_cmd[item_num]
 
     if debug_mode: print(log_ch_id, log_ch)
+    current_DF = log_ch[0]
+    current_EF = log_ch[1]
+    if current_DF[:16] in file_system.DF_name: current_DF = current_DF[:16]
 
     app_rst = []
     if prot_type[item_num][0] == 'TX':
@@ -18,18 +21,18 @@ def rst(input, read, error, item_num):
         if log_ch_id >= 4: app_rst[-1] += ' [Extended]'
         if debug_mode: print(app_rst[-1])
 
-        app_rst.append(void+' Current DF File : %s' % log_ch[0])
-        if log_ch[0]:
-            if log_ch[0] in file_system.DF_name:
-                app_rst[-1] += ' [' + file_system.DF_name[log_ch[0]] + ']'
+        app_rst.append(void+' Current DF File : %s'%log_ch[0])
+        if current_DF:
+            if current_DF in file_system.DF_name:
+                app_rst[-1] += ' [%s]'%file_system.DF_name[current_DF]
         if debug_mode: print(app_rst[-1])
 
-        app_rst.append(void+' Current EF File : %s' % log_ch[1])
-        if log_ch[0] and log_ch[1]:
-            if log_ch[0] in file_system.DF_name:
-                if log_ch[0] in file_system.EF_name:
-                    if log_ch[1] in file_system.EF_name[log_ch[0]]:
-                        app_rst[-1] += ' [' + file_system.EF_name[log_ch[0]][log_ch[1]] + ']'
+        app_rst.append(void+' Current EF File : %s'%log_ch[1])
+        if current_DF and current_EF:
+            if current_DF in file_system.DF_name:
+                if current_DF in file_system.EF_name:
+                    if current_EF in file_system.EF_name[current_DF]:
+                        app_rst[-1] += ' [%s]'%file_system.EF_name[current_DF][current_EF]
         if debug_mode: print(app_rst[-1])
 
         app_rst.append(void+' Current Command : %s' % cmd.replace('(X)',''))

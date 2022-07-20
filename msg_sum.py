@@ -81,9 +81,9 @@ def rst(input, load_type):
                     #     file_name, error = file_system.process(log_ch[log_ch_id][0], log_ch[log_ch_id][1], last_file_id)
                 elif ins == '88' or ins == '89': # AUTHENTICATE
                     if debug_mode: print('AUTH check     :',prot_data[m])
-                    print(log_ch[log_ch_id][0])
+                    if debug_mode: print('log_ch DF name :',log_ch[log_ch_id][0])
                     file_name, error = file_system.process(log_ch[log_ch_id][0], '', last_file_id)
-                    cmd += ' (%s)'%file_name.split(' ')[1].replace(']','')
+                    if 'ADF' in file_name: cmd += ' (%s)'%file_name.split(' ')[1].replace(']','')
                     file_name = ''
                     RAND_len = int(prot_data[m][2][:2],16)
                     RAND = prot_data[m][2][2:2+RAND_len*2]
