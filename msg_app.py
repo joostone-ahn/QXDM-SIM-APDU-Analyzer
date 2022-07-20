@@ -1,5 +1,5 @@
 import file_system
-debug_mode = 1
+debug_mode = 0
 
 def rst(input, read, error, item_num):
     prot_type, sum_cmd, sum_log_ch, sum_log_ch_id = input
