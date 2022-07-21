@@ -307,17 +307,44 @@ class Basic_GUI(QWidget):
 
         sum_remote_show = ''
         for n in self.sum_remote:
-            if '[' in n[0]:
-                if 'MSISDN' in n[0]: n[0] = n[0].split(' ')[0]
-                else: n[0] = n[0].split(' ')[1] + ' ' + n[0].split(' ')[0]
+            # if '[' in n[0]:
+            #     if 'MSISDN' in n[0]: n[0] = n[0].split(' ')[0]
+            #     else: n[0] = n[0].split(' ')[1] + ' ' + n[0].split(' ')[0]
+            # if len(n)==2:
+            #     if n[0] in ['ICCID', 'IMSI', 'MSISDN', 'IMPI'] :
+            #         sum_remote_show += '-' * 80 + '\n'
+            #         sum_remote_show += '%10s' % n[0] + '   ' + n[1].replace('   ', ' ') + '\n'
+            # if len(n)>2:
+            #     sum_remote_show += '-' * 80 + '\n'
+            #     sum_remote_show += '%10s' % n[0] + '   ' + n[1].replace('   ', ' ') + '\n'
+            #     sum_remote_show += '%10s' % ">>>" + '   ' + n[2].replace('   ', ' ') + '\n'
             if len(n)==2:
-                if n[0] in ['ICCID', 'IMSI', 'MSISDN', 'IMPI'] :
-                    sum_remote_show += '-' * 80 + '\n'
-                    sum_remote_show += '%10s' % n[0] + '   ' + n[1].replace('   ', ' ') + '\n'
+                sum_remote_show += '-' * 80 + '\n'
+                sum_remote_show += '%20s'%n[0] + '   '
+                if '\n' in n[1]:
+                    item_list = n[1].split('\n')
+                    for m in range(len(item_list)):
+                        if m > 0: sum_remote_show += ' '*23
+                        sum_remote_show += item_list[m] + '\n'
+                else:
+                    sum_remote_show += n[1].replace('   ', ' ') + '\n'
             if len(n)>2:
                 sum_remote_show += '-' * 80 + '\n'
-                sum_remote_show += '%10s' % n[0] + '   ' + n[1].replace('   ', ' ') + '\n'
-                sum_remote_show += '%10s' % ">>>" + '   ' + n[2].replace('   ', ' ') + '\n'
+                sum_remote_show += '%20s'%n[0] + '   '
+                if '\n' in n[1] or '\n' in n[2]:
+                    if '\n' in n[1]:
+                        item_list = n[1].split('\n')
+                        for m in range(len(item_list)):
+                            if m > 0: sum_remote_show += ' '*23
+                            sum_remote_show += item_list[m] + '\n'
+                    if '\n' in n[2]:
+                        item_list = n[2].split('\n')
+                        for m in range(len(item_list)):
+                            if m > 0: sum_remote_show += '%20s'%'>>>' + '   '
+                            sum_remote_show += item_list[m] + '\n'
+                else:
+                    sum_remote_show += n[1].replace('   ', ' ') + '\n'
+                    sum_remote_show += '%20s'%'>>>' + '   ' + n[2].replace('   ', ' ') + '\n'
         if sum_remote_show:
             sum_remote_show += '-' * 80
             self.SIM_Info_list.setText(sum_remote_show)
