@@ -87,12 +87,16 @@ def parser(file_name, data, offset):
             byte_array = bytearray.fromhex(data[4:4+int(data[2:4],16)*2])
             parsing += byte_array.decode()
     elif file_name == 'ACC':
-        parsing += 'BIN ' + format(int(data[:2], 16), 'b').zfill(8)
-        parsing += ' ' + format(int(data[2:], 16), 'b').zfill(8)
-        cnt = 0
-        for n in list(parsing.split('BIN ')[1].replace(' ','')):
-            cnt +=1
-            if n == '1': parsing = "Access Control Class '%d'"%(16-cnt) + ' (%s)'%parsing
+        parsing = '0x%s'%data[:2] + '%s '%data[2:]
+        print(parsing)
+        parsing += '(BIN ' + format(int(data[:2], 16), 'b').zfill(8)
+        print(parsing)
+        parsing += ' ' + format(int(data[2:], 16), 'b').zfill(8) +')'
+        print(parsing)
+        # cnt = 0
+        # for n in list(parsing.split('BIN ')[1].replace(' ','')[-10:]):
+        #     cnt +=1
+        #     if n == '1': parsing = "Access Control Class '%d'"%(10-cnt) + ' (%s)'%parsing
     elif file_name in ['HPLMNwAcT','OPLMNwAcT','PLMNwAcT']:
         PLMNwAcT = []
         for n in range(int(len(data)/10)):
